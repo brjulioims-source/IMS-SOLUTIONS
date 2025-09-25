@@ -1,0 +1,68 @@
+.sidebar {
+  background: #fff;
+  border-right: 1px solid #eee;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.sidebar.open {
+  width: 240px;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+}
+
+.logo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #4f46e5;
+  letter-spacing: 0.5px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+
+.sidebar-menu a {
+  font-family: 'poppins', sans-serif;
+  padding: 10px;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s;
+}
+
+.sidebar-menu a:hover {
+  background: #f3f4f6;
+  color: #4f46e5;
+}
+
+.sidebar-menu a.active {
+  background: #e0e7ff;
+  color: #4f46e5;
+  font-weight: 600;
+}

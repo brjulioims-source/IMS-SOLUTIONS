@@ -1,0 +1,72 @@
+/* Estilos base */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* 🌞 Modo claro */
+body[data-theme="light"] {
+  --bg-color: #f9fafb;
+  --text-color: #111;
+  --card-bg: #ffffff;
+  --border-color: #e5e7eb;
+  --link-color: #333;
+  --link-hover-bg: #f3f4f6;
+  --link-active-bg: #e0e7ff;
+  --link-active-color: #4f46e5;
+}
+
+/* 🌙 Modo oscuro */
+body[data-theme="dark"] {
+  --bg-color: #111827;
+  --text-color: #f9fafb;
+  --card-bg: #1f2937;
+  --border-color: #374151;
+  --link-color: #d1d5db;
+  --link-hover-bg: #374151;
+  --link-active-bg: #374151;
+  --link-active-color: #60a5fa;
+}
+
+/* Sidebar */
+.sidebar {
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+}
+
+.sidebar-menu a {
+  color: var(--link-color);
+  transition: background 0.3s, color 0.3s;
+}
+
+.sidebar-menu a:hover {
+  background: var(--link-hover-bg);
+  color: var(--link-active-color);
+}
+
+.sidebar-menu a.active {
+  background: var(--link-active-bg);
+  color: var(--link-active-color);
+  font-weight: 600;
+}
+
+/* Cards */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+}
