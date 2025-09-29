@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import DataTables from "./pages/DataTables";
 import SignIn from "./pages/SignIn";
+import FormSections from "./pages/FormSections";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Routes>
             <Route path="/" element={<SignIn />} /> 
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/formulario" element={<FormSections />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/data-tables" element={<DataTables />} />
             </Routes>

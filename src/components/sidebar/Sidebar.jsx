@@ -18,8 +18,8 @@ function Sidebar() {
         <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
           🏠 {isOpen && "Menú"}
         </NavLink>
-        <NavLink to="/marketplace" className={({ isActive }) => (isActive ? "active" : "")}>
-          🛒 {isOpen && "NFT Marketplace"}
+        <NavLink to="/formulario" className={({ isActive }) => (isActive ? "active" : "")}>
+          📝 {isOpen && "Formulario"}
         </NavLink>
         <NavLink to="/data-tables" className={({ isActive }) => (isActive ? "active" : "")}>
           📊 {isOpen && "Data Tables"}
