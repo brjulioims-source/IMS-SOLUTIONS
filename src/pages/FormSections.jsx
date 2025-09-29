@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Modal from "../components/navbar/Modal";
+import Modal from "../components/modal/Modal";
 import DashboardLayout from "../layouts/DashboardLayout";
 import "./FormSections.css";
 
