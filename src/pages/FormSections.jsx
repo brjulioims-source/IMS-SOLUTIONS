@@ -6,51 +6,57 @@ import Swal from "sweetalert2";
 import "./FormSections.css";
 
 function FormSections() {
-  const totalSteps = 6; // ahora tienes 6 pasos
+  const totalSteps = 6;
   const [currentStep, setCurrentStep] = useState(1);
   const [openModal, setOpenModal] = useState(false);
 
   const closeModal = () => setOpenModal(false);
 
-  // Configuración global de Toast
-  const toast = Swal.mixin({
-    toast: true,
-    position: "bottom-end",
-    showConfirmButton: false,
-    timer: 2500,
-    timerProgressBar: true,
-  });
-
-  // Validación y guardado
+  // Validación y guardado con Toast
   const handleSubmit = (e, stepNumber, fields) => {
     e.preventDefault();
 
     const emptyField = fields.some((field) => !field.trim());
-
     if (emptyField) {
-      toast.fire({
+      Swal.fire({
+        toast: true,
+        position: "bottom-end",
         icon: "error",
-        title: "Por favor completa todos los campos",
+        title: "⚠️ Por favor complete todos los campos obligatorios",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
       });
       return;
     }
 
-    // Guardado exitoso
+    // Avanza de paso y cierra modal
     setCurrentStep(stepNumber + 1);
     closeModal();
 
-    toast.fire({
+    // Toast de éxito
+    Swal.fire({
+      toast: true,
+      position: "bottom-end",
       icon: "success",
-      title: "Datos guardados con éxito",
+      title: "Guardado con éxito",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
     });
   };
 
   // Control de apertura de modales
   const handleOpenModal = (modalStep, modalName) => {
     if (modalStep > currentStep) {
-      toast.fire({
+      Swal.fire({
+        toast: true,
+        position: "bottom-end",
         icon: "warning",
-        title: "Debes completar el paso anterior primero",
+        title: "⚠️ Debes completar el paso anterior antes de continuar",
+        showConfirmButton: false,
+        timer: 2500,
+        timerProgressBar: true,
       });
       return;
     }
@@ -63,24 +69,42 @@ function FormSections() {
         {/* Barra de progreso */}
         <StepProgress currentStep={currentStep} totalSteps={totalSteps} />
 
-        {/* Secciones horizontales */}
+        {/* Secciones */}
         <div className="sections">
-          <div className="section-card" onClick={() => handleOpenModal(1, "oficinas")}>
+          <div
+            className="section-card"
+            onClick={() => handleOpenModal(1, "oficinas")}
+          >
             🏢 Oficinas
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(2, "datosPersonales")}>
+          <div
+            className="section-card"
+            onClick={() => handleOpenModal(2, "datosPersonales")}
+          >
             👤 Datos Personales
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(3, "derivados")}>
+          <div
+            className="section-card"
+            onClick={() => handleOpenModal(3, "derivados")}
+          >
             👨‍👩‍👧 Derivados (Esposas e Hijos)
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(4, "tipoContrato")}>
+          <div
+            className="section-card"
+            onClick={() => handleOpenModal(4, "tipoContrato")}
+          >
             📑 Tipo de Contrato
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(5, "costo")}>
+          <div
+            className="section-card"
+            onClick={() => handleOpenModal(5, "costo")}
+          >
             💵 Costo
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(6, "observaciones")}>
+          <div
+            className="section-card"
+            onClick={() => handleOpenModal(6, "observaciones")}
+          >
             📝 Observaciones
           </div>
         </div>
@@ -102,22 +126,50 @@ function FormSections() {
             <p>Por favor seleccione la oficina a la cual vincular este contrato:</p>
 
             <div className="oficinas-grid">
-              <label><input type="radio" name="oficina" value="Houston" /> Houston</label>
-              <label><input type="radio" name="oficina" value="Gainesville" /> Gainesville</label>
-              <label><input type="radio" name="oficina" value="Kissimmee 1" /> Kissimmee 1</label>
-              <label><input type="radio" name="oficina" value="Norcross" /> Norcross</label>
-              <label><input type="radio" name="oficina" value="Tampa" /> Tampa</label>
-              <label><input type="radio" name="oficina" value="Renton" /> Renton</label>
-              <label><input type="radio" name="oficina" value="Austin" /> Austin</label>
-              <label><input type="radio" name="oficina" value="San Antonio" /> San Antonio</label>
-              <label><input type="radio" name="oficina" value="San Juan" /> San Juan</label>
-              <label><input type="radio" name="oficina" value="Mayagüez" /> Mayagüez</label>
-              <label><input type="radio" name="oficina" value="New Jersey" /> New Jersey</label>
-              <label><input type="radio" name="oficina" value="Chula Vista" /> Chula Vista</label>
-              <label><input type="radio" name="oficina" value="Hackensack" /> Hackensack</label>
+              <label>
+                <input type="radio" name="oficina" value="Houston" /> Houston
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Gainesville" /> Gainesville
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Kissimmee 1" /> Kissimmee 1
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Norcross" /> Norcross
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Tampa" /> Tampa
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Renton" /> Renton
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Austin" /> Austin
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="San Antonio" /> San Antonio
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="San Juan" /> San Juan
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Mayagüez" /> Mayagüez
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="New Jersey" /> New Jersey
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Chula Vista" /> Chula Vista
+              </label>
+              <label>
+                <input type="radio" name="oficina" value="Hackensack" /> Hackensack
+              </label>
             </div>
 
-            <button type="submit" className="btn-primary">Guardar</button>
+            <button type="submit" className="btn-guardar">
+              Guardar
+            </button>
           </form>
         </Modal>
 
@@ -126,92 +178,112 @@ function FormSections() {
           isOpen={openModal === "datosPersonales"}
           onClose={closeModal}
           title="Formulario de Datos Personales"
+          className="large"
         >
           <form
-            className="form"
+            className="form form-grid"
             onSubmit={(e) =>
-              handleSubmit(e, 2, [e.target[0].value, e.target[1].value])
+              handleSubmit(e, 2, [
+                e.target[0].value,
+                e.target[1].value,
+                e.target[2].value,
+                e.target[3].value,
+                e.target[4].value,
+                e.target[5].value,
+                e.target[7].value, // idioma nativo
+              ])
             }
           >
-            <label>Nombre completo</label>
-            <input type="text" placeholder="Ingrese el nombre completo" />
-            <label>Correo electrónico</label>
-            <input type="email" placeholder="Ingrese el correo electrónico" />
-            <button type="submit">Guardar</button>
-          </form>
-        </Modal>
+            {/* Mr/Ms */}
+            <label>
+              Seleccione según aplique *
+              <select>
+                <option value="">Seleccione</option>
+                <option value="Mr.">Mr.</option>
+                <option value="Ms.">Ms.</option>
+              </select>
+            </label>
 
-        {/* Modal Derivados */}
-        <Modal
-          isOpen={openModal === "derivados"}
-          onClose={closeModal}
-          title="Formulario de Derivados"
-        >
-          <form
-            className="form"
-            onSubmit={(e) =>
-              handleSubmit(e, 3, [e.target[0].value])
-            }
-          >
-            <label>Derivados (Esposas e Hijos)</label>
-            <input type="text" placeholder="Ingrese nombres de derivados" />
-            <button type="submit">Guardar</button>
-          </form>
-        </Modal>
+            {/* Nombre */}
+            <label>
+              Nombre del contratante *
+              <input type="text" placeholder="Ejemplo: Juan Hernández" />
+            </label>
 
-        {/* Modal Tipo de Contrato */}
-        <Modal
-          isOpen={openModal === "tipoContrato"}
-          onClose={closeModal}
-          title="Formulario de Tipo de Contrato"
-        >
-          <form
-            className="form"
-            onSubmit={(e) =>
-              handleSubmit(e, 4, [e.target[0].value])
-            }
-          >
-            <label>Tipo de Contrato</label>
-            <input type="text" placeholder="Ingrese el tipo de contrato" />
-            <button type="submit">Guardar</button>
-          </form>
-        </Modal>
+            {/* Correo */}
+            <label>
+              Correo electrónico *
+              <input
+                type="email"
+                placeholder="Ejemplo: juanhernandez@gmail.com"
+              />
+            </label>
 
-        {/* Modal Costo */}
-        <Modal
-          isOpen={openModal === "costo"}
-          onClose={closeModal}
-          title="Formulario de Costo"
-        >
-          <form
-            className="form"
-            onSubmit={(e) =>
-              handleSubmit(e, 5, [e.target[0].value, e.target[1].value])
-            }
-          >
-            <label>Monto</label>
-            <input type="number" placeholder="0.00" />
-            <label>Moneda</label>
-            <input type="text" placeholder="USD, EUR..." />
-            <button type="submit">Guardar</button>
-          </form>
-        </Modal>
+            {/* Teléfono */}
+            <label>
+              Teléfono *
+              <input
+                type="tel"
+                placeholder="Ejemplo: 1234567890"
+                pattern="[0-9]+"
+                title="Solo números"
+              />
+            </label>
 
-        {/* Modal Observaciones */}
-        <Modal
-          isOpen={openModal === "observaciones"}
-          onClose={closeModal}
-          title="Formulario de Observaciones"
-        >
-          <form
-            className="form"
-            onSubmit={(e) =>
-              handleSubmit(e, 6, [e.target[0].value])
-            }
-          >
-            <label>Observaciones</label>
-            <textarea placeholder="Ingrese observaciones" />
-            <button type="submit">Guardar</button>
+            {/* Dirección */}
+            <label>
+              Dirección *
+              <input type="text" placeholder="Ingrese la dirección" />
+            </label>
+
+            {/* País de origen */}
+            <label>
+              País de origen *
+              <input type="text" placeholder="Ejemplo: Guatemala" />
+            </label>
+
+            {/* Fecha de nacimiento */}
+            <label>
+              Fecha de nacimiento *
+              <input type="date" />
+            </label>
+
+            {/* Alien Number (opcional) */}
+            <label>
+              Alien Number
+              <input type="text" placeholder="Opcional" />
+            </label>
+
+            {/* Idioma nativo */}
+            <label>
+              Idioma nativo *
+              <select>
+                <option value="">Seleccione</option>
+                <option>Español</option>
+                <option>Portugués</option>
+                <option>Francés</option>
+                <option>Criollo</option>
+                <option>Hindi</option>
+                <option>Chino (Mandarín y Cantonés)</option>
+                <option>Tagalo (Filipino)</option>
+                <option>Vietnamita</option>
+                <option>Árabe</option>
+                <option>Coreano</option>
+                <option>Ruso</option>
+                <option>Italiano</option>
+                <option>Japonés</option>
+                <option>Persa (Farsi)</option>
+                <option>Urdu</option>
+                <option>Gujarati</option>
+                <option>Turco</option>
+                <option>Tailandés</option>
+                <option>Inglés</option>
+              </select>
+            </label>
+
+            <button type="submit" className="btn-guardar">
+              Guardar
+            </button>
           </form>
         </Modal>
       </div>

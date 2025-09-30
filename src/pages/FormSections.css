@@ -121,3 +121,23 @@
   height: 16px;
   cursor: pointer;
 }
+
+/* Modal grande */
+.modal-content.large {
+  width: 900px;
+  max-width: 95%;
+}
+
+/* Form en 2 columnas */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  font-size: 14px;
+}

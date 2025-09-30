@@ -93,8 +93,9 @@
 .form label {
   font-size: 13px;
   color: var(--text-color);
-  margin-bottom: 6px;
+  margin-bottom: 12px;
   font-weight: 500;
+  top: -50px;
 }
 
 .form input,
