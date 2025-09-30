@@ -26,6 +26,11 @@
   transform: translateY(0);
   animation: modalPop 180ms ease-out;
 }
+/* Fix: SweetAlert2 siempre arriba del modal */
+.swal2-container {
+  z-index: 9999 !important;
+}
+
 
 /* pequeña animación de entrada */
 @keyframes modalPop {
