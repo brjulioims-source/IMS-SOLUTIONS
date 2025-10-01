@@ -332,201 +332,196 @@ function FormSections() {
         </Modal>
 
 
-        {/* Modal Derivados */}
- <Modal
-  isOpen={openModal === "derivados"}
-  onClose={closeModal}
-  title="Formulario de Derivados (Esposo/a e Hijos)"
->
-  <form
-    className="form form-grid"
-    onSubmit={(e) => {
-      e.preventDefault();
-
-      // Validar si escogió esposo(a)
-      if (!hasSpouse) {
-        Swal.fire({
-          toast: true,
-          position: "bottom-end",
-          icon: "error",
-          title: "⚠️ Debe seleccionar si tiene esposo(a) o no",
-          showConfirmButton: false,
-          timer: 2500,
-          timerProgressBar: true,
-        });
-        return;
-      }
-
-      if (hasSpouse === "si" && !spouseName.trim()) {
-        Swal.fire({
-          toast: true,
-          position: "bottom-end",
-          icon: "error",
-          title: "⚠️ Debe ingresar el nombre del esposo/a",
-          showConfirmButton: false,
-          timer: 2500,
-          timerProgressBar: true,
-        });
-        return;
-      }
-
-      // Validar si escogió hijos
-      if (!hasChildren) {
-        Swal.fire({
-          toast: true,
-          position: "bottom-end",
-          icon: "error",
-          title: "⚠️ Debe seleccionar si tiene hijos o no",
-          showConfirmButton: false,
-          timer: 2500,
-          timerProgressBar: true,
-        });
-        return;
-      }
-
-      if (hasChildren === "si") {
-        if (!numChildren || numChildren <= 0) {
-          Swal.fire({
-            toast: true,
-            position: "bottom-end",
-            icon: "error",
-            title: "⚠️ Debe ingresar la cantidad de hijos",
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-          });
-          return;
-        }
-
-        if (childrenNames.some((child) => !child.trim())) {
-          Swal.fire({
-            toast: true,
-            position: "bottom-end",
-            icon: "error",
-            title: "⚠️ Debe ingresar todos los nombres de los hijos",
-            showConfirmButton: false,
-            timer: 2500,
-            timerProgressBar: true,
-          });
-          return;
-        }
-      }
-
-      // Guardar en el estado global
-      const data = {
-        hasSpouse,
-        spouseName,
-        hasChildren,
-        numChildren,
-        childrenNames,
-      };
-
-      setFormData((prev) => ({ ...prev, derivados: data }));
-      setCurrentStep(4);
-      closeModal();
-
-      Swal.fire({
-        toast: true,
-        position: "bottom-end",
-        icon: "success",
-        title: "✅ Derivados guardados con éxito",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-      });
-    }}
-  >
-    {/* Pregunta esposo/a */}
-    <label>
-      ¿Tienes esposo(a)? *
-      <select
-        value={hasSpouse}
-        onChange={(e) => setHasSpouse(e.target.value)}
+      {/* Modal Derivados */}
+      <Modal
+        isOpen={openModal === "derivados"}
+        onClose={closeModal}
+        title="Formulario de Derivados (Esposo/a e Hijos)"
       >
-        <option value="" disabled>
-          Seleccione
-        </option>
-        <option value="si">Sí</option>
-        <option value="no">No</option>
-      </select>
-    </label>
+        <form
+          className="form form-grid"
+          onSubmit={(e) => {
+            e.preventDefault();
 
-    {hasSpouse === "si" && (
-      <label>
-        Nombre del esposo(a) *
-        <input
-          type="text"
-          value={spouseName}
-          onChange={(e) => setSpouseName(e.target.value)}
-          placeholder="Ejemplo: Ana Pérez"
-        />
-      </label>
-    )}
+            // Validar si escogió esposo(a)
+            if (!hasSpouse) {
+              Swal.fire({
+                toast: true,
+                position: "bottom-end",
+                icon: "error",
+                title: "⚠️ Debe seleccionar si tiene esposo(a) o no",
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+              });
+              return;
+            }
 
-    {/* Pregunta hijos */}
-    <label>
-      ¿Tienes hijos? *
-      <select
-        value={hasChildren}
-        onChange={(e) => {
-          setHasChildren(e.target.value);
-          setChildrenNames([]);
-          setNumChildren(0);
-        }}
-      >
-        <option value="" disabled>
-          Seleccione
-        </option>
-        <option value="si">Sí</option>
-        <option value="no">No</option>
-      </select>
-    </label>
+            if (hasSpouse === "si" && !spouseName.trim()) {
+              Swal.fire({
+                toast: true,
+                position: "bottom-end",
+                icon: "error",
+                title: "⚠️ Debe ingresar el nombre del esposo/a",
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+              });
+              return;
+            }
 
-    {hasChildren === "si" && (
-      <>
-        <label>
-          ¿Cuántos hijos tienes? (máx. 12) *
-          <input
-            type="number"
-            min="1"
-            max="12"
-            value={numChildren}
-            onChange={(e) => {
-              const value = Math.min(parseInt(e.target.value, 10) || 0, 12);
-              setNumChildren(value);
-              setChildrenNames(Array(value).fill(""));
-            }}
-          />
-        </label>
+            // Validar si escogió hijos
+            if (!hasChildren) {
+              Swal.fire({
+                toast: true,
+                position: "bottom-end",
+                icon: "error",
+                title: "⚠️ Debe seleccionar si tiene hijos o no",
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+              });
+              return;
+            }
 
-        {Array.from({ length: numChildren }, (_, i) => (
-          <label key={i}>
-            Nombre del hijo {i + 1} *
-            <input
-              type="text"
-              value={childrenNames[i] || ""}
-              onChange={(e) => {
-                const updated = [...childrenNames];
-                updated[i] = e.target.value;
-                setChildrenNames(updated);
-              }}
-              placeholder={`Ejemplo: Hijo ${i + 1}`}
-            />
+            if (hasChildren === "si") {
+              if (!numChildren || numChildren <= 0) {
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: "⚠️ Debe ingresar la cantidad de hijos",
+                  showConfirmButton: false,
+                  timer: 2500,
+                  timerProgressBar: true,
+                });
+                return;
+              }
+
+              if (childrenNames.some((child) => !child.trim())) {
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: "⚠️ Debe ingresar todos los nombres de los hijos",
+                  showConfirmButton: false,
+                  timer: 2500,
+                  timerProgressBar: true,
+                });
+                return;
+              }
+            }
+
+            // Guardar en el estado global
+            const data = {
+              hasSpouse,
+              spouseName,
+              hasChildren,
+              numChildren,
+              childrenNames,
+            };
+
+            setFormData((prev) => ({ ...prev, derivados: data }));
+            setCurrentStep(4);
+            closeModal();
+
+            Swal.fire({
+              toast: true,
+              position: "bottom-end",
+              icon: "success",
+              title: "✅ Derivados guardados con éxito",
+              showConfirmButton: false,
+              timer: 2000,
+              timerProgressBar: true,
+            });
+          }}
+        >
+          {/* Pregunta esposo/a */}
+          <label>
+            ¿Tienes esposo(a)? *
+            <select
+              value={hasSpouse}
+              onChange={(e) => setHasSpouse(e.target.value)}
+            >
+              <option value="" disabled>
+                Seleccione
+              </option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
           </label>
-        ))}
-      </>
-    )}
 
-    <button type="submit" className="btn-guardar">
-      Guardar
-    </button>
-  </form>
-</Modal>
+          {hasSpouse === "si" && (
+            <label>
+              Nombre del esposo(a) *
+              <input
+                type="text"
+                value={spouseName}
+                onChange={(e) => setSpouseName(e.target.value)}
+                placeholder="Ejemplo: Ana Pérez"
+              />
+            </label>
+          )}
 
+          {/* Pregunta hijos */}
+          <label>
+            ¿Tienes hijos? *
+            <select
+              value={hasChildren}
+              onChange={(e) => {
+                setHasChildren(e.target.value);
+                setChildrenNames([]);
+                setNumChildren(0);
+              }}
+            >
+              <option value="" disabled>
+                Seleccione
+              </option>
+              <option value="si">Sí</option>
+              <option value="no">No</option>
+            </select>
+          </label>
 
+          {hasChildren === "si" && (
+            <>
+              <label>
+                ¿Cuántos hijos tienes? (máx. 12) *
+                <input
+                  type="number"
+                  min="1"
+                  max="12"
+                  value={numChildren}
+                  onChange={(e) => {
+                    const value = Math.min(parseInt(e.target.value, 10) || 0, 12);
+                    setNumChildren(value);
+                    setChildrenNames(Array(value).fill(""));
+                  }}
+                />
+              </label>
 
+              {Array.from({ length: numChildren }, (_, i) => (
+                <label key={i}>
+                  Nombre del hijo {i + 1} *
+                  <input
+                    type="text"
+                    value={childrenNames[i] || ""}
+                    onChange={(e) => {
+                      const updated = [...childrenNames];
+                      updated[i] = e.target.value;
+                      setChildrenNames(updated);
+                    }}
+                    placeholder={`Ejemplo: Hijo ${i + 1}`}
+                  />
+                </label>
+              ))}
+            </>
+          )}
 
-
+          <button type="submit" className="btn-guardar">
+            Guardar
+          </button>
+        </form>
+      </Modal>
 
        {/* Modal Tipo de Contrato */}
         <Modal
