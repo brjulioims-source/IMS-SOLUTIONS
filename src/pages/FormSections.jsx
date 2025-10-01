@@ -10,10 +10,16 @@ function FormSections() {
   const [currentStep, setCurrentStep] = useState(1);
   const [openModal, setOpenModal] = useState(false);
 
+  // Guardar la data de cada formulario
+  const [formData, setFormData] = useState({
+    oficinas: {},
+    datosPersonales: {},
+  });
+
   const closeModal = () => setOpenModal(false);
 
   // Validación y guardado con Toast
-  const handleSubmit = (e, stepNumber, fields) => {
+  const handleSubmit = (e, stepKey, stepNumber, fields) => {
     e.preventDefault();
 
     const emptyField = fields.some((field) => !field.trim());
@@ -30,6 +36,10 @@ function FormSections() {
       return;
     }
 
+    // Guardamos los datos del formulario en el estado
+    const data = Object.fromEntries(new FormData(e.target).entries());
+    setFormData((prev) => ({ ...prev, [stepKey]: data }));
+
     // Avanza de paso y cierra modal
     setCurrentStep(stepNumber + 1);
     closeModal();
@@ -39,7 +49,7 @@ function FormSections() {
       toast: true,
       position: "bottom-end",
       icon: "success",
-      title: "Guardado con éxito",
+      title: "✅ Guardado con éxito",
       showConfirmButton: false,
       timer: 2000,
       timerProgressBar: true,
@@ -60,7 +70,24 @@ function FormSections() {
       });
       return;
     }
-    setOpenModal(modalName);
+
+    // Si ya hay datos guardados en este paso, preguntar si quiere editar
+    if (formData[modalName] && Object.keys(formData[modalName]).length > 0) {
+      Swal.fire({
+        title: "Ya guardaste este paso",
+        text: "¿Quieres editar la información?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Sí, editar",
+        cancelButtonText: "No",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setOpenModal(modalName);
+        }
+      });
+    } else {
+      setOpenModal(modalName);
+    }
   };
 
   return (
@@ -118,7 +145,7 @@ function FormSections() {
           <form
             className="form"
             onSubmit={(e) =>
-              handleSubmit(e, 1, [
+              handleSubmit(e, "oficinas", 1, [
                 e.target.querySelector("input[type='radio']:checked")?.value || "",
               ])
             }
@@ -126,45 +153,31 @@ function FormSections() {
             <p>Por favor seleccione la oficina a la cual vincular este contrato:</p>
 
             <div className="oficinas-grid">
-              <label>
-                <input type="radio" name="oficina" value="Houston" /> Houston
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Gainesville" /> Gainesville
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Kissimmee 1" /> Kissimmee 1
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Norcross" /> Norcross
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Tampa" /> Tampa
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Renton" /> Renton
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Austin" /> Austin
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="San Antonio" /> San Antonio
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="San Juan" /> San Juan
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Mayagüez" /> Mayagüez
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="New Jersey" /> New Jersey
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Chula Vista" /> Chula Vista
-              </label>
-              <label>
-                <input type="radio" name="oficina" value="Hackensack" /> Hackensack
-              </label>
+              {[
+                "Houston",
+                "Gainesville",
+                "Kissimmee 1",
+                "Norcross",
+                "Tampa",
+                "Renton",
+                "Austin",
+                "San Antonio",
+                "San Juan",
+                "Mayagüez",
+                "New Jersey",
+                "Chula Vista",
+                "Hackensack",
+              ].map((oficina) => (
+                <label key={oficina}>
+                  <input
+                    type="radio"
+                    name="oficina"
+                    value={oficina}
+                    defaultChecked={formData.oficinas?.oficina === oficina}
+                  />
+                  {oficina}
+                </label>
+              ))}
             </div>
 
             <button type="submit" className="btn-guardar">
@@ -183,7 +196,7 @@ function FormSections() {
           <form
             className="form form-grid"
             onSubmit={(e) =>
-              handleSubmit(e, 2, [
+              handleSubmit(e, "datosPersonales", 2, [
                 e.target[0].value,
                 e.target[1].value,
                 e.target[2].value,
@@ -194,70 +207,94 @@ function FormSections() {
               ])
             }
           >
-            {/* Mr/Ms */}
             <label>
               Seleccione según aplique *
-              <select>
+              <select
+                name="saludo"
+                defaultValue={formData.datosPersonales?.saludo || ""}
+              >
                 <option value="">Seleccione</option>
                 <option value="Mr.">Mr.</option>
                 <option value="Ms.">Ms.</option>
               </select>
             </label>
 
-            {/* Nombre */}
             <label>
               Nombre del contratante *
-              <input type="text" placeholder="Ejemplo: Juan Hernández" />
+              <input
+                type="text"
+                name="nombre"
+                defaultValue={formData.datosPersonales?.nombre || ""}
+                placeholder="Ejemplo: Juan Hernández"
+              />
             </label>
 
-            {/* Correo */}
             <label>
               Correo electrónico *
               <input
                 type="email"
+                name="correo"
+                defaultValue={formData.datosPersonales?.correo || ""}
                 placeholder="Ejemplo: juanhernandez@gmail.com"
               />
             </label>
 
-            {/* Teléfono */}
             <label>
               Teléfono *
               <input
                 type="tel"
+                name="telefono"
+                defaultValue={formData.datosPersonales?.telefono || ""}
                 placeholder="Ejemplo: 1234567890"
                 pattern="[0-9]+"
-                title="Solo números"
               />
             </label>
 
-            {/* Dirección */}
             <label>
               Dirección *
-              <input type="text" placeholder="Ingrese la dirección" />
+              <input
+                type="text"
+                name="direccion"
+                defaultValue={formData.datosPersonales?.direccion || ""}
+                placeholder="Ingrese la dirección"
+              />
             </label>
 
-            {/* País de origen */}
             <label>
               País de origen *
-              <input type="text" placeholder="Ejemplo: Guatemala" />
+              <input
+                type="text"
+                name="pais"
+                defaultValue={formData.datosPersonales?.pais || ""}
+                placeholder="Ejemplo: Guatemala"
+              />
             </label>
 
-            {/* Fecha de nacimiento */}
             <label>
               Fecha de nacimiento *
-              <input type="date" />
+              <input
+                type="date"
+                name="fechaNacimiento"
+                defaultValue={formData.datosPersonales?.fechaNacimiento || ""}
+              />
             </label>
 
-            {/* Alien Number (opcional) */}
             <label>
               Alien Number
-              <input type="text" placeholder="Opcional" />
+              <input
+                type="text"
+                name="alienNumber"
+                defaultValue={formData.datosPersonales?.alienNumber || ""}
+                placeholder="Opcional"
+              />
             </label>
 
-            {/* Idioma nativo */}
             <label>
               Idioma nativo *
-              <select>
+              <select
+                name="idioma"
+                defaultValue={formData.datosPersonales?.idioma || ""}
+              >
                 <option value="">Seleccione</option>
                 <option>Español</option>
                 <option>Portugués</option>
