@@ -2,16 +2,15 @@
 
 .modal-overlay {
   position: fixed;
-  inset: 0; /* top:0; right:0; bottom:0; left:0; */
+  inset: 0;
   background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1100;
-  /* suaviza el fondo (si el navegador lo soporta) */
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
-  padding: 20px; /* espacio para mobile */
+  padding: 20px;
 }
 
 .modal-content {
@@ -26,13 +25,13 @@
   transform: translateY(0);
   animation: modalPop 180ms ease-out;
 }
+
 /* Fix: SweetAlert2 siempre arriba del modal */
 .swal2-container {
   z-index: 9999 !important;
 }
 
-
-/* pequeña animación de entrada */
+/* Animación entrada */
 @keyframes modalPop {
   from {
     opacity: 0;
@@ -58,6 +57,7 @@
   font-size: 18px;
   font-weight: 600;
   color: var(--text-color);
+  letter-spacing: 0.5px; /* letras un poco más abiertas */
 }
 
 .close-btn {
@@ -76,14 +76,15 @@
   transform: scale(1.05);
 }
 
-/* cuerpo del modal con scroll interno si hace falta */
 .modal-body {
   padding: 16px 18px 20px 18px;
   max-height: calc(100vh - 220px);
   overflow: auto;
 }
 
-/* estilos de formulario reutilizables dentro del modal */
+/* ======================= */
+/* FORMULARIOS GENERALES   */
+/* ======================= */
 .form {
   display: flex;
   flex-direction: column;
@@ -95,7 +96,6 @@
   color: var(--text-color);
   margin-bottom: 12px;
   font-weight: 500;
-  top: -50px;
 }
 
 .form input,
@@ -118,45 +118,94 @@
   box-shadow: 0 0 0 4px rgba(79,70,229,0.06);
 }
 
-/* botones */
-.form .btn-row {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 6px;
+/* ======================= */
+/* MODAL DE CONTRATO EXTRA */
+/* ======================= */
+.modal-content.contrato {
+  width: 9000px;        /* mucho más ancho */
+  max-width: 95%;
+  padding: 36px;       /* más espacio interno */
 }
 
-.form button {
-  padding: 10px 14px;
-  border-radius: 8px;
-  border: none;
+.modal-content.contrato .modal-header {
+  padding: 28px 32px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.modal-content.contrato .modal-body {
+  padding: 28px 32px 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* buscador */
+.modal-content.contrato .input-search {
+  width: 100%;
+  padding: 16px 18px;
+  padding-right: 30px;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 10px;
+  font-size: 15px;
+  margin-bottom: 22px;
+  letter-spacing: 0.6px; /* letras más separadas */
+  line-height: 1.6;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal-content.contrato .input-search:focus {
+  border-color: var(--link-active-color, #4f46e5);
+  box-shadow: 0 0 0 4px rgba(79,70,229,0.06);
+}
+
+/* lista de contratos */
+.modal-content.contrato .select-list {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 8px 0;
+}
+
+.modal-content.contrato .select-item {
+  padding: 16px 20px;
   cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-size: 15px;
+  letter-spacing: 0.6px; /* separa letras */
+  line-height: 1.6;      /* más alto entre líneas */
+}
+
+.modal-content.contrato .select-item:hover {
+  background: rgba(79,70,229,0.08);
+  color: var(--link-active-color);
+}
+
+.modal-content.contrato .select-item.active {
+  background: rgba(79,70,229,0.12);
   font-weight: 600;
+  color: var(--link-active-color);
+}
+
+.modal-content.contrato .select-empty {
+  padding: 18px;
+  color: #888;
   font-size: 14px;
+  text-align: center;
+  letter-spacing: 0.5px;
 }
 
-.form .btn-primary {
-  background: var(--link-active-color);
-  color: #fff;
+/* footer con botón */
+.modal-content.contrato .modal-footer {
+  margin-top: 28px;
 }
 
-.form .btn-secondary {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-color);
-}
-
-/* footer opcional dentro del modal */
-.modal-footer {
-  padding: 12px 18px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  background: transparent;
-}
-
-/* responsive: pantallas pequeñas */
+/* ======================= */
+/* RESPONSIVE              */
+/* ======================= */
 @media (max-width: 520px) {
   .modal-content {
     width: 100%;
@@ -166,5 +215,10 @@
 
   .modal-body {
     max-height: calc(100vh - 160px);
+  }
+
+  .modal-content.contrato {
+    width: 100%;
+    padding: 24px;
   }
 }
