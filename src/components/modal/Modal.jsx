@@ -1,13 +1,14 @@
 import "../modal/Modal.css";
 
-function Modal({ isOpen, onClose, children }) {
+function Modal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
         <div className="modal-content">
             <div className="modal-header">
-                <h2>Modal Title</h2>
+              {/* Aquí va el título dinámico */}
+                <h2>{title}</h2>
                 <button className="close-btn" onClick={onClose}>
                     ✖
                 </button>

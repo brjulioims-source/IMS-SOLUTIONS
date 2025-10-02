@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import "./FormSections.css";
 
 function FormSections() {
-  const totalSteps = 6;
+  const totalSteps = 7;
   const [currentStep, setCurrentStep] = useState(1);
   const [openModal, setOpenModal] = useState(false);
 
@@ -18,7 +18,7 @@ function FormSections() {
     datosPersonales: {},
     derivados: {},
     tipoContrato: {},
-    costo: {},
+    faseDePago: {},
     observaciones: {},
   });
 
@@ -32,95 +32,123 @@ function FormSections() {
   const [numChildren, setNumChildren] = useState("");
 
   // -----------------------------
-  // Estados: Tipo de Contrato (buscador)
+  // Estados: Tipo de Contrato
+  // -----------------------------
+  const [searchContrato, setSearchContrato] = useState("");
+  const [selectedContrato, setSelectedContrato] = useState(null);
+
+  // Estado para el descuento
+  const [tieneDescuento, setTieneDescuento] = useState("no");
+  const [autorizadoPor, setAutorizadoPor] = useState("");
+  const [montoDescuento, setMontoDescuento] = useState(0);
+
+
+  // -----------------------------
+  // Lista de contratos (nombre + precio)
   // -----------------------------
   const contratos = [
-    "245-I",
-    "ADVANCE PAROLE",
-    "AFFIRMATIVE ASYLUM",
-    "ALTERNATIVE TO DETENTION",
-    "APPEAL",
-    "APPEARANCE AS ATTORNEY",
-    "APPEARANCE AS ATTORNEY (CREDIBLE FEAR INTERVIEW)",
-    "APPEARANCE AS ATTORNEY (CREDIBLE FEAR INTERVIEW), proceedings in Immigration and Customs Enforcement",
-    "APPEARANCE AS ATTORNEY (E-61)",
-    "APPEARANCE AS ATTORNEY (MOTION TO TERMINATED)",
-    "APPEARANCE AS ATTORNEY (REASONABLE FEAR INTERVIEW)",
-    "APPEARANCE AS ATTORNEY PROCEEDINGS IN USCIS",
-    "APPEARANCE AS ATTORNEY WITH INTENT TO FILE A MOTION TO TERMINATED",
-    "APPEARANCE AS ATTORNEY, proceedings in Immigration and Customs Enforcement",
-    "APPEARANCE AS ATTORNEY, proceedings in USCIS (CRBA)",
-    "ASILO AFIRMATIVO FUERA DEL AÑO",
-    "ASYLUM APPOINTMENT RESCHEDULING",
-    "ATTORNEY REPRESENTATION / BAIL REQUEST",
-    "ATTORNEY REPRESENTATION / BAIL REQUEST + SKELETON I-589",
-    "BOND",
-    "CANCELLATION OF REMOVAL",
-    "CITIZENSHIP PROCESS (N-400)",
-    "CITIZENSHIP PROCESS (N-600)",
-    "CUBAN ADJUSTMENT",
-    "DEFENSIVE ASYLUM",
-    "DEPENDENCY ACTION",
-    "DISMISSAL I-589 USCIS",
-    "DOCUMENTARY REVIEW",
-    "FAMILY PETITION",
-    "FAMILY PETITION (I-130)",
-    "FAMILY PETITION (I-824)",
-    "FAMILY PETITION (NVC)",
-    "FAMILY PETITION (NVC + STATUS ADJUSTMENT)",
-    "FAMILY PETITION (PIP)",
-    "FAMILY PETITION INTERVIEW PREPARATION",
-    "FINGERPRINTS",
-    "FOIA",
-    "HABEAS CORPUS PETITION",
-    "HUMANITARIAN PAROLE",
-    "HUMANITARIAN VISA",
-    "I-360 + I765 PETTION FOR SPECIAL IMMIGRANT",
-    "I-485 ADJUSTMENT STATUS",
-    "I-589 FORM",
-    "LEGAL CALL",
-    "ORDER OF SUPERVISION",
-    "PERMANENT RESIDENT CARD RENEWAL",
-    "PROSECUTORIAL DISCRETION",
-    "REPLACEMENT OF CITIZENSHIP",
-    "REOPEN (STAY OF REMOVAL)",
-    "REOPEN CASE",
-    "REOPEN CASE + SKELETON I-589",
-    "REPRESENTATION OF USCIS PROCEEDINGS (I-730)",
-    "REQUEST FILE",
-    "REQUEST FILE E-59",
-    "REQUEST FOR PAROLE",
-    "SPECIAL IMMIGRANT JUVENILE",
-    "STATUS ADJUSTMENT",
-    "STAY OF REMOVAL",
-    "TPS",
-    "VAWA",
-    "VISA EXTENSION APPLICATION",
-    "VISA FIANCE",
-    "VISA U",
-    "VISA U CERTIFICATION",
-    "VOLUNTARY DEPARTURE",
-    "WAIVER",
-    "WITHHOLDING OF REMOVAL",
-    "WORK PERMIT",
-    "WORK PERMIT RENEWAL",
-  ];
+  { nombre: "AFFIRMATIVE ASYLUM OUT OF THE YEAR (AA FUERA DEL AÑO)", precio: 10500, conyuge: 2000, hijo: 500 },
+  { nombre: "AFFIRMATIVE ASYLUM FOLLOW-UP + EVIDENCE PACKAGE", precio: 7000, conyuge: null, hijo: null },
+  { nombre: "ASYLUM INTERVIEW PREPARATION + EVIDENCE PACKAGE (Menos 30 días)", precio: 4000, conyuge: null, hijo: null },
+  { nombre: "APPEARANCE AS ATTORNET (CREDIBLE FEAR INTERVIEW), proceedings in ICE", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "FAMILY PETITION INTERVIEW", precio: 2500, conyuge: null, hijo: null },
+  { nombre: "DEFENSIVE ASYLUM", precio: 12500, conyuge: 2000, hijo: 500 },
+  { nombre: "AFFIRMATIVE ASYLUM", precio: 10500, conyuge: 2000, hijo: 500 },
+  { nombre: "CANCELLATION OF REMOVAL", precio: 10500, conyuge: null, hijo: null },
+  { nombre: "INDIVIDUAL COURT ATTORNEY REPRESENTATION (REPRESENTATION + AMENDMENT/RELIEF)", precio: 8500, conyuge: null, hijo: null },
+  { nombre: "APPEARANCE AS ATTORNEY WITH INTENT TO FILE A MOTION TO TERMINATED", precio: 5000, conyuge: null, hijo: null },
+  { nombre: "REPRESENTATION OF DETAINEES", precio: 5000, conyuge: null, hijo: null },
+  { nombre: "REPRESENTATION OF ATTORNEY (E61)", precio: 2500, conyuge: null, hijo: null },
+  { nombre: "LEGAL CALL", precio: 1000, conyuge: null, hijo: null },
+  { nombre: "ALTERNATIVE TO DETENTION", precio: 3000, conyuge: null, hijo: null },
+  { nombre: "BOND", precio: 4500, conyuge: null, hijo: null },
+  { nombre: "ATTORNEY REPRESENTATION / BAIL REQUEST", precio: 7000, conyuge: null, hijo: null },
+  { nombre: "APPEAL (NEW CUSTOMER)", precio: 7000, conyuge: null, hijo: null },
+  { nombre: "APPEAL (ACTIVE CLIENT)", precio: 4500, conyuge: null, hijo: null },
+  { nombre: "REOPEN (STAY OF REMOVAL)", precio: 6000, conyuge: null, hijo: null },
+  { nombre: "REOPEN + I-589 (NON-ACTIVE CUSTOMER)", precio: 6000, conyuge: null, hijo: null },
+  { nombre: "REOPEN + I-589 (ACTIVE CUSTOMER)", precio: 5000, conyuge: null, hijo: null },
+  { nombre: "REQUEST FILE E-59", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "LEGAL FAMILY PETITION", precio: 8000, conyuge: 1500, hijo: 1500 },
+  { nombre: "IRREGULAR COMPLETE FAMILY PETITION", precio: 9000, conyuge: null, hijo: 1500 },
+  { nombre: "PAROLE IN PLACE (ARMY) (NEW CUSTOMER)", precio: 3000, conyuge: null, hijo: null },
+  { nombre: "PAROLE IN PLACE (ARMY) (ACTIVE CLIENT)", precio: 2500, conyuge: null, hijo: null },
+  { nombre: "FAMILY PETITION FOR PIP (MILITARY)", precio: 7000, conyuge: 1500, hijo: 1500 },
+  { nombre: "IRREGULAR IMMEDIATE FAMILY PETITION (I - 130)", precio: 3000, conyuge: 1500, hijo: null },
+  { nombre: "FAMILY PETITION (PREFERENCE CATEGORY I-130)", precio: 3000, conyuge: null, hijo: null },
+  { nombre: "FAMILY PETITION FOR ASYLUM OR REFUGEE (I-730)", precio: 3000, conyuge: null, hijo: null },
+  { nombre: "FAMILY PETITION STAGE 2 (CONSULAR PROCESS) NVC", precio: 4000, conyuge: null, hijo: null },
+  { nombre: "MINOR LAW (STAGE 1: ORDER OF DEPENDENCY)", precio: 5000, conyuge: null, hijo: null },
+  { nombre: "MINOR LAW (STAGE 2: I-360 + I-765 PETITION FOR SPECIAL IMMIGRANT)", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "JUVENILE LAW (STAGE 3: I-485 ADJUSTMENT STATUS)", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "CUBAN ADJUSTMENT WITH NO CUT ADMISSION (I-485 STATUS ADJUSTMENT)", precio: 5000, conyuge: 1500, hijo: 1500 },
+  { nombre: "RESIDENCE / ADJUSTMENT OF STATUS", precio: 4500, conyuge: null, hijo: null },
+  { nombre: "RESIDENCE (CARD RENEWAL OR LOSS)", precio: 2500, conyuge: null, hijo: null },
+  { nombre: "RENEWAL OF RESIDENCY + WITHDRAWAL OF CONDITIONS (FOR. I-751)", precio: 3000, conyuge: null, hijo: null },
+  { nombre: "STATUS ADJUSTEMENT + 245-I", precio: 5000, conyuge: null, hijo: null },
+  { nombre: "CITIZENSHIP PROCESS (N-400)", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "CITIZENSHIP PROCESS (N-600) (CIUDADANIA)", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "REPLACEMENT OF CITIZENSHIP", precio: 2000, conyuge: null, hijo: null },
+  { nombre: "APPEARANCE AS ATTORNEY, proceedings in USCIS (CRBA)", precio: 2500, conyuge: null, hijo: null },
+  { nombre: "VISA U CERTIFICATION", precio: 2000, conyuge: null, hijo: null },
+  { nombre: "VISA U", precio: 5500, conyuge: 1500, hijo: 1500 },
+  { nombre: "VISA T", precio: 5500, conyuge: 1500, hijo: 1500 },
+  { nombre: "VAWA (CITIZEN)", precio: 6000, conyuge: null, hijo: 1500 },
+  { nombre: "VAWA (RESIDENT)", precio: 8000, conyuge: null, hijo: 1500 },
+  { nombre: "VISA FIANCE", precio: 2000, conyuge: null, hijo: 1500 },
+  { nombre: "WAIVER (IRREGULAR PRESENCE) I-601A", precio: 4000, conyuge: null, hijo: null },
+  { nombre: "WAIVER (FOR INADMISSIBILITY) I-601", precio: 4000, conyuge: null, hijo: null },
+  { nombre: "WAIVER (FOR DEPORTATION) I-212", precio: 4000, conyuge: null, hijo: null },
+  { nombre: "RENOVACIÓN DACA", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "TPS (NEW CUSTOMER)", precio: 2500, conyuge: 2000, hijo: null },
+  { nombre: "TPS (ACTIVE CLIENT)", precio: 2000, conyuge: 2000, hijo: null },
+  { nombre: "REQUEST FOR USCIS", precio: 2000, conyuge: null, hijo: null },
+  { nombre: "ADVANCE PAROLE", precio: 1500, conyuge: null, hijo: null },
+  { nombre: "ORGANIZED DEPORTATION", precio: 3000, conyuge: null, hijo: null },
+  { nombre: "VOLUNTARY DEPARTURE", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "STAY OF REMOVAL", precio: 3500, conyuge: null, hijo: null },
+  { nombre: "WORK PERMIT", precio: 1620, conyuge: null, hijo: null },
+  { nombre: "WORK PERMIT RENEWAL", precio: 870, conyuge: null, hijo: null },
+  { nombre: "FINGERPRINTS", precio: 1878, conyuge: null, hijo: null },
+  { nombre: "FOIA OUTSIDE THE US", precio: 880, conyuge: null, hijo: null },
+  { nombre: "FOIA", precio: 780, conyuge: null, hijo: null },
+  { nombre: "DISMISSAL I589 USCIS", precio: 5000, conyuge: null, hijo: null },
+  { nombre: "ASYLUM APPOINTMENT REDHEDULING", precio: 2500, conyuge: null, hijo: null },
+  { nombre: "ADJUSTMENT OF REFUGEE STATUS", precio: 4500, conyuge: 2000, hijo: 1500 },
+  { nombre: "ICE ACCOMPANIMENT BY LAWYER", precio: 2500, conyuge: null, hijo: null },
+];
 
-  const [searchContrato, setSearchContrato] = useState("");
-  const [selectedContrato, setSelectedContrato] = useState(
-    formData.tipoContrato?.tipoContrato || ""
-  );
 
-  const contratosFiltrados = contratos.filter((c) =>
-    c.toLowerCase().includes(searchContrato.toLowerCase())
-  );
+  const contratosFiltrados = contratos
+  .filter((c) =>
+    c.nombre.toLowerCase().includes(searchContrato.toLowerCase())
+  )
+  .sort((a, b) => a.nombre.localeCompare(b.nombre));
 
   // -----------------------------
   // Helpers
   // -----------------------------
   const closeModal = () => setOpenModal(false);
 
-  // Validación genérica (para formularios simples)
+  // Atajos para abrir modales con estado preparado
+  const openOficinas = () => setOpenModal("oficinas");
+  const openDatosPersonales = () => setOpenModal("datosPersonales");
+  const openDerivados = () => setOpenModal("derivados");
+  const openFaseDePago = () => setOpenModal("faseDePago");
+  const openObservaciones = () => setOpenModal("observaciones");
+
+  const openTipoContrato = () => {
+    // Inicializa la selección con lo ya guardado (si existe)
+    if (formData.tipoContrato?.nombre) {
+      setSelectedContrato(formData.tipoContrato);
+    } else {
+      setSelectedContrato(null);
+    }
+    setSearchContrato("");
+    setOpenModal("tipoContrato");
+  };
+
+  // Validación genérica
   const handleSubmit = (e, stepKey, stepNumber, fields) => {
     e.preventDefault();
 
@@ -140,7 +168,6 @@ function FormSections() {
 
     const data = Object.fromEntries(new FormData(e.target).entries());
     setFormData((prev) => ({ ...prev, [stepKey]: data }));
-
     setCurrentStep(stepNumber + 1);
     closeModal();
 
@@ -155,40 +182,6 @@ function FormSections() {
     });
   };
 
-  // Control de apertura de modales por paso
-  const handleOpenModal = (modalStep, modalName) => {
-    if (modalStep > currentStep) {
-      Swal.fire({
-        toast: true,
-        position: "bottom-end",
-        icon: "warning",
-        title: "⚠️ Debes completar el paso anterior antes de continuar",
-        showConfirmButton: false,
-        timer: 2500,
-        timerProgressBar: true,
-      });
-      return;
-    }
-
-    // Si ya hay datos guardados en este paso, preguntar si quiere editar
-    if (formData[modalName] && Object.keys(formData[modalName]).length > 0) {
-      Swal.fire({
-        title: "Ya guardaste este paso",
-        text: "¿Quieres editar la información?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Sí, editar",
-        cancelButtonText: "No",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setOpenModal(modalName);
-        }
-      });
-    } else {
-      setOpenModal(modalName);
-    }
-  };
-
   return (
     <DashboardLayout>
       <div>
@@ -197,23 +190,32 @@ function FormSections() {
 
         {/* Secciones */}
         <div className="sections">
-          <div className="section-card" onClick={() => handleOpenModal(1, "oficinas")}>
+          <div className="section-card" onClick={openOficinas}>
             🏢 Oficinas
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(2, "datosPersonales")}>
+          <div className="section-card" onClick={openDatosPersonales}>
             👤 Datos Personales
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(3, "derivados")}>
-            👨‍👩‍👧 Derivados (Esposas e Hijos)
+          <div className="section-card" onClick={openDerivados}>
+            👨‍👩‍👧 Derivados (Esposo/a e Hijos)
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(4, "tipoContrato")}>
+          <div className="section-card" onClick={openTipoContrato}>
             📑 Tipo de Contrato
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(5, "costo")}>
-            💵 Costo
+          <div className="section-card" onClick={openFaseDePago}>
+            💵 Fase de pago
           </div>
-          <div className="section-card" onClick={() => handleOpenModal(6, "observaciones")}>
-            📝 Observaciones
+          <div className="section-card" onClick={openObservaciones}>
+            💰 Pago de saldo
+          </div>
+          <div className="section-card" onClick={openObservaciones}>
+            📜 Carta de matrimonio
+          </div>
+          <div className="section-card" onClick={openObservaciones}>
+            ⚖️ Carta de corte próximo
+          </div>
+          <div className="section-card" onClick={openObservaciones}>
+            💳 Pago con tarjeta digital
           </div>
         </div>
 
@@ -286,7 +288,7 @@ function FormSections() {
                 e.target[3].value, // telefono
                 e.target[4].value, // direccion
                 e.target[5].value, // pais
-                e.target[7].value, // idioma nativo (ojo índice por el Alien Number)
+                e.target[7].value, // idioma
               ])
             }
           >
@@ -532,18 +534,38 @@ function FormSections() {
             className="form"
             onSubmit={(e) => {
               e.preventDefault();
-              if (!selectedContrato.trim()) {
-                Swal.fire({ toast: true, position: "bottom-end", icon: "error", title: "⚠️ Debe seleccionar un contrato", showConfirmButton: false, timer: 2500, timerProgressBar: true });
+              if (!selectedContrato) {
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: "⚠️ Debe seleccionar un contrato",
+                  showConfirmButton: false,
+                  timer: 2500,
+                  timerProgressBar: true,
+                });
                 return;
               }
-              setFormData((prev) => ({ ...prev, tipoContrato: { tipoContrato: selectedContrato } }));
+
+              setFormData((prev) => ({
+                ...prev,
+                tipoContrato: selectedContrato,
+              }));
               setCurrentStep(5);
               closeModal();
 
-              Swal.fire({ toast: true, position: "bottom-end", icon: "success", title: "✅ Contrato guardado con éxito", showConfirmButton: false, timer: 2000, timerProgressBar: true });
+              Swal.fire({
+                toast: true,
+                position: "bottom-end",
+                icon: "success",
+                title: "✅ Contrato guardado con éxito",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+              });
             }}
           >
-            <label>
+            <label style={{ marginBottom: "12px", display: "block" }}>
               Por favor seleccione el contrato a generar *
               <input
                 type="text"
@@ -559,13 +581,17 @@ function FormSections() {
                 contratosFiltrados.map((c, idx) => (
                   <div
                     key={idx}
-                    className={`select-item ${selectedContrato === c ? "active" : ""}`}
+                    className={`select-item ${
+                      selectedContrato?.nombre === c.nombre ? "active" : ""
+                    }`}
                     onClick={() => {
-                      // Si ya hay un contrato guardado en formData y selecciona otro distinto
-                      if (formData.tipoContrato?.tipoContrato && formData.tipoContrato.tipoContrato !== c) {
+                      if (
+                        formData.tipoContrato?.nombre &&
+                        formData.tipoContrato.nombre !== c.nombre
+                      ) {
                         Swal.fire({
                           title: "Ya guardaste un contrato",
-                          text: `¿Quieres cambiarlo por "${c}"?`,
+                          text: `¿Quieres cambiarlo por "${c.nombre}"?`,
                           icon: "question",
                           showCancelButton: true,
                           confirmButtonText: "Sí, cambiar",
@@ -576,29 +602,69 @@ function FormSections() {
                           }
                         });
                       } else {
-                        // Si no había nada guardado o selecciona el mismo
                         setSelectedContrato(c);
                       }
                     }}
                   >
-                    {c}
+                    {c.nombre} — ${c.precio}
                   </div>
                 ))
               ) : (
                 <div className="select-empty">No se encontraron contratos</div>
               )}
             </div>
-            <button type="submit" className="btn-guardar">Guardar</button>
+
+            {/* Bloque de detalles y total */}
+            {selectedContrato && (
+              <div className="select-details">
+                <p>
+                  <strong>Contrato:</strong> {selectedContrato.nombre}
+                </p>
+                <p>Precio base: ${selectedContrato.precio}</p>
+
+                {formData.derivados?.hasSpouse === "si" && (
+                  <p>+ Cónyuge: ${selectedContrato.conyuge || 0}</p>
+                )}
+
+                {formData.derivados?.hasChildren === "si" &&
+                  formData.derivados?.numChildren > 0 && (
+                    <p>
+                      + Hijos ({formData.derivados.numChildren}): $
+                      {(selectedContrato.hijo || 0) *
+                        formData.derivados.numChildren}
+                    </p>
+                  )}
+
+                <p style={{ fontWeight: "bold", marginTop: "8px" }}>
+                  Total: $
+                  {selectedContrato.precio +
+                    (formData.derivados?.hasSpouse === "si"
+                      ? selectedContrato.conyuge || 0
+                      : 0) +
+                    (formData.derivados?.hasChildren === "si" &&
+                    formData.derivados?.numChildren
+                      ? (selectedContrato.hijo || 0) *
+                        formData.derivados.numChildren
+                      : 0)}
+                </p>
+              </div>
+            )}
+
+            <button type="submit" className="btn-guardar">
+              Guardar
+            </button>
           </form>
         </Modal>
 
+
+
         {/* ------------------------------------------ */}
-        {/* Modal Costo (Paso 5 -> 6)                  */}
+        {/* Modal Fase de Pago (Paso 5 -> 6)           */}
         {/* ------------------------------------------ */}
         <Modal
-          isOpen={openModal === "costo"}
+          isOpen={openModal === "faseDePago"}
           onClose={closeModal}
-          title="Formulario de Costo"
+          title="Formulario de Fase de Pago"
         >
           <form
             className="form form-grid"
@@ -613,21 +679,21 @@ function FormSections() {
               }
 
               const data = Object.fromEntries(form.entries());
-              setFormData((prev) => ({ ...prev, costo: data }));
+              setFormData((prev) => ({ ...prev, faseDePago: data }));
               setCurrentStep(6);
               closeModal();
 
-              Swal.fire({ toast: true, position: "bottom-end", icon: "success", title: "✅ Costo guardado con éxito", showConfirmButton: false, timer: 2000, timerProgressBar: true });
+              Swal.fire({ toast: true, position: "bottom-end", icon: "success", title: "✅ Fase de Pago guardada con éxito", showConfirmButton: false, timer: 2000, timerProgressBar: true });
             }}
           >
             <label>
               Monto (USD) *
-              <input name="monto" type="number" min="0" step="0.01" placeholder="Ej: 1200.00" defaultValue={formData.costo?.monto || ""} />
+              <input name="monto" type="number" min="0" step="0.01" placeholder="Ej: 1200.00" defaultValue={formData.faseDePago?.monto || ""} />
             </label>
 
             <label>
               Método de pago
-              <select name="metodo" defaultValue={formData.costo?.metodo || ""}>
+              <select name="metodo" defaultValue={formData.faseDePago?.metodo || ""}>
                 <option value="">Seleccione</option>
                 <option>Tarjeta</option>
                 <option>Efectivo</option>
@@ -638,92 +704,53 @@ function FormSections() {
 
             <label>
               Notas
-              <input name="nota" type="text" placeholder="Opcional" defaultValue={formData.costo?.nota || ""} />
+              <input name="nota" type="text" placeholder="Opcional" defaultValue={formData.faseDePago?.nota || ""} />
             </label>
 
             <button type="submit" className="btn-guardar">Guardar</button>
           </form>
         </Modal>
 
-      {/* Modal Tipo de Contrato (Paso 4 -> 5) */}
-      <Modal
-        isOpen={openModal === "tipoContrato"}
-        onClose={closeModal}
-        title="Formulario de Tipo de Contrato"
-      >
-        <form
-          className="form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!selectedContrato.trim()) {
+        {/* ------------------------------------------ */}
+        {/* Modal Observaciones (Paso 6 -> 7)          */}
+        {/* ------------------------------------------ */}
+        <Modal
+          isOpen={openModal === "observaciones"}
+          onClose={closeModal}
+          title="Observaciones"
+        >
+          <form
+            className="form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const data = Object.fromEntries(new FormData(e.target).entries());
+              setFormData((prev) => ({ ...prev, observaciones: data }));
+              setCurrentStep(7);
+              closeModal();
               Swal.fire({
                 toast: true,
                 position: "bottom-end",
-                icon: "error",
-                title: "⚠️ Debe seleccionar un contrato",
+                icon: "success",
+                title: "✅ Observaciones guardadas",
                 showConfirmButton: false,
-                timer: 2500,
+                timer: 2000,
                 timerProgressBar: true,
               });
-              return;
-            }
-            setFormData((prev) => ({
-              ...prev,
-              tipoContrato: { tipoContrato: selectedContrato },
-            }));
-            setCurrentStep(5);
-            closeModal();
+            }}
+          >
+            <label>
+              Observaciones
+              <textarea
+                name="texto"
+                rows="5"
+                placeholder="Notas u observaciones adicionales"
+                defaultValue={formData.observaciones?.texto || ""}
+              />
+            </label>
 
-            Swal.fire({
-              toast: true,
-              position: "bottom-end",
-              icon: "success",
-              title: "✅ Contrato guardado con éxito",
-              showConfirmButton: false,
-              timer: 2000,
-              timerProgressBar: true,
-            });
-          }}
-        >
-          <label>
-            Por favor seleccione el contrato a generar *
-            <input
-              type="text"
-              placeholder="Buscar contrato..."
-              value={searchContrato}
-              onChange={(e) => setSearchContrato(e.target.value)}
-              className="input-search"
-            />
-          </label>
-
-          <div className="select-list">
-            {contratosFiltrados.length > 0 ? (
-              contratosFiltrados.map((c, idx) => (
-                <div
-                  key={idx}
-                  className={`select-item ${selectedContrato === c ? "active" : ""}`}
-                  onClick={() => setSelectedContrato(c)}
-                >
-                  {c}
-                </div>
-              ))
-            ) : (
-              <div className="select-empty">No se encontraron contratos</div>
-            )}
-          </div>
-
-          {selectedContrato && (
-            <p style={{ marginTop: "8px", fontSize: "14px", fontWeight: "500" }}>
-              ✅ Contrato seleccionado: <strong>{selectedContrato}</strong>
-            </p>
-          )}
-
-          <button type="submit" className="btn-guardar">
-            Guardar
-          </button>
-        </form>
-      </Modal>
-
+            <button type="submit" className="btn-guardar">Guardar</button>
+          </form>
+        </Modal>
       </div>
     </DashboardLayout>
   );

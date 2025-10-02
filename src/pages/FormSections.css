@@ -1,10 +1,13 @@
+/* Contenedor de secciones */
 .sections {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr); /* 9 columnas iguales */
   gap: 20px;
   justify-content: center;
   margin: 20px 0;
 }
 
+/* Tarjetas de cada sección */
 .section-card {
   background: #fff;
   border: 1px solid #ddd;
@@ -14,6 +17,11 @@
   transition: transform 0.2s, background 0.2s;
   font-size: 16px;
   font-weight: 500;
+  text-align: center;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .section-card:hover {
@@ -21,7 +29,7 @@
   transform: translateY(-3px);
 }
 
-/* Modal estilos */
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -32,6 +40,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .modal-content {
@@ -40,6 +49,8 @@
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-header {
@@ -55,15 +66,16 @@
   cursor: pointer;
 }
 
+/* Formularios */
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   margin-top: 15px;
 }
 
 .form input {
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
 }
@@ -97,15 +109,17 @@
 .btn-guardar:hover {
   background: #4338ca;
 }
+
 .btn-guardar:disabled {
   background: #a5b4fc;
   cursor: not-allowed;
 }
 
+/* Grid oficinas */
 .oficinas-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* dos columnas */
-  gap: 10px 20px; /* espacio entre filas y columnas */
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 20px;
   margin-top: 12px;
 }
 
@@ -116,6 +130,7 @@
   font-size: 14px;
   cursor: pointer;
 }
+
 .oficinas-grid input[type="checkbox"] {
   width: 16px;
   height: 16px;
@@ -140,4 +155,47 @@
   flex-direction: column;
   font-weight: 500;
   font-size: 14px;
+}
+
+/* Lista de contratos */
+.select-list {
+  margin-top: 15px; /* más espacio entre input y lista */
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px;
+}
+
+/* Cada contrato */
+.select-item {
+  padding: 14px 16px;
+  margin-bottom: 10px; /* separación entre contratos */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1.6;
+  transition: background 0.2s, transform 0.1s;
+  border: 1px solid transparent;
+  background-color: #fafafa;
+}
+
+.select-item:hover {
+  background: rgba(79, 70, 229, 0.08);
+  border: 1px solid var(--link-active-color, #4f46e5);
+  transform: translateX(3px);
+}
+
+.select-item.active {
+  background: rgba(79, 70, 229, 0.15);
+  border: 1px solid var(--link-active-color, #4f46e5);
+  font-weight: 600;
+}
+
+.select-empty {
+  padding: 14px;
+  color: #888;
+  font-size: 14px;
+  text-align: center;
 }
