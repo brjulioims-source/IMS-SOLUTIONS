@@ -53,83 +53,81 @@ function FormSections() {
   }, [openModal, formData]);
 
   // -----------------------------
-  // Lista de contratos (nombre + precio)
+  // Lista de contratos (filtro y selección)
   // -----------------------------
-
   const contratos = [
-  { nombre: "AFFIRMATIVE ASYLUM OUT OF THE YEAR (AA FUERA DEL AÑO)", precio: 10500, conyuge: 2000, hijo: 500 },
-  { nombre: "AFFIRMATIVE ASYLUM FOLLOW-UP + EVIDENCE PACKAGE", precio: 7000, conyuge: null, hijo: null },
-  { nombre: "ASYLUM INTERVIEW PREPARATION + EVIDENCE PACKAGE (Menos 30 días)", precio: 4000, conyuge: null, hijo: null },
-  { nombre: "APPEARANCE AS ATTORNET (CREDIBLE FEAR INTERVIEW), proceedings in ICE", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "FAMILY PETITION INTERVIEW", precio: 2500, conyuge: null, hijo: null },
-  { nombre: "DEFENSIVE ASYLUM", precio: 12500, conyuge: 2000, hijo: 500 },
-  { nombre: "AFFIRMATIVE ASYLUM", precio: 10500, conyuge: 2000, hijo: 500 },
-  { nombre: "CANCELLATION OF REMOVAL", precio: 10500, conyuge: null, hijo: null },
-  { nombre: "INDIVIDUAL COURT ATTORNEY REPRESENTATION (REPRESENTATION + AMENDMENT/RELIEF)", precio: 8500, conyuge: null, hijo: null },
-  { nombre: "APPEARANCE AS ATTORNEY WITH INTENT TO FILE A MOTION TO TERMINATED", precio: 5000, conyuge: null, hijo: null },
-  { nombre: "REPRESENTATION OF DETAINEES", precio: 5000, conyuge: null, hijo: null },
-  { nombre: "REPRESENTATION OF ATTORNEY (E61)", precio: 2500, conyuge: null, hijo: null },
-  { nombre: "LEGAL CALL", precio: 1000, conyuge: null, hijo: null },
-  { nombre: "ALTERNATIVE TO DETENTION", precio: 3000, conyuge: null, hijo: null },
-  { nombre: "BOND", precio: 4500, conyuge: null, hijo: null },
-  { nombre: "ATTORNEY REPRESENTATION / BAIL REQUEST", precio: 7000, conyuge: null, hijo: null },
-  { nombre: "APPEAL (NEW CUSTOMER)", precio: 7000, conyuge: null, hijo: null },
-  { nombre: "APPEAL (ACTIVE CLIENT)", precio: 4500, conyuge: null, hijo: null },
-  { nombre: "REOPEN (STAY OF REMOVAL)", precio: 6000, conyuge: null, hijo: null },
-  { nombre: "REOPEN + I-589 (NON-ACTIVE CUSTOMER)", precio: 6000, conyuge: null, hijo: null },
-  { nombre: "REOPEN + I-589 (ACTIVE CUSTOMER)", precio: 5000, conyuge: null, hijo: null },
-  { nombre: "REQUEST FILE E-59", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "LEGAL FAMILY PETITION", precio: 8000, conyuge: 1500, hijo: 1500 },
-  { nombre: "IRREGULAR COMPLETE FAMILY PETITION", precio: 9000, conyuge: null, hijo: 1500 },
-  { nombre: "PAROLE IN PLACE (ARMY) (NEW CUSTOMER)", precio: 3000, conyuge: null, hijo: null },
-  { nombre: "PAROLE IN PLACE (ARMY) (ACTIVE CLIENT)", precio: 2500, conyuge: null, hijo: null },
-  { nombre: "FAMILY PETITION FOR PIP (MILITARY)", precio: 7000, conyuge: 1500, hijo: 1500 },
-  { nombre: "IRREGULAR IMMEDIATE FAMILY PETITION (I - 130)", precio: 3000, conyuge: 1500, hijo: null },
-  { nombre: "FAMILY PETITION (PREFERENCE CATEGORY I-130)", precio: 3000, conyuge: null, hijo: null },
-  { nombre: "FAMILY PETITION FOR ASYLUM OR REFUGEE (I-730)", precio: 3000, conyuge: null, hijo: null },
-  { nombre: "FAMILY PETITION STAGE 2 (CONSULAR PROCESS) NVC", precio: 4000, conyuge: null, hijo: null },
-  { nombre: "MINOR LAW (STAGE 1: ORDER OF DEPENDENCY)", precio: 5000, conyuge: null, hijo: null },
-  { nombre: "MINOR LAW (STAGE 2: I-360 + I-765 PETITION FOR SPECIAL IMMIGRANT)", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "JUVENILE LAW (STAGE 3: I-485 ADJUSTMENT STATUS)", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "CUBAN ADJUSTMENT WITH NO CUT ADMISSION (I-485 STATUS ADJUSTMENT)", precio: 5000, conyuge: 1500, hijo: 1500 },
-  { nombre: "RESIDENCE / ADJUSTMENT OF STATUS", precio: 4500, conyuge: null, hijo: null },
-  { nombre: "RESIDENCE (CARD RENEWAL OR LOSS)", precio: 2500, conyuge: null, hijo: null },
-  { nombre: "RENEWAL OF RESIDENCY + WITHDRAWAL OF CONDITIONS (FOR. I-751)", precio: 3000, conyuge: null, hijo: null },
-  { nombre: "STATUS ADJUSTEMENT + 245-I", precio: 5000, conyuge: null, hijo: null },
-  { nombre: "CITIZENSHIP PROCESS (N-400)", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "CITIZENSHIP PROCESS (N-600) (CIUDADANIA)", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "REPLACEMENT OF CITIZENSHIP", precio: 2000, conyuge: null, hijo: null },
-  { nombre: "APPEARANCE AS ATTORNEY, proceedings in USCIS (CRBA)", precio: 2500, conyuge: null, hijo: null },
-  { nombre: "VISA U CERTIFICATION", precio: 2000, conyuge: null, hijo: null },
-  { nombre: "VISA U", precio: 5500, conyuge: 1500, hijo: 1500 },
-  { nombre: "VISA T", precio: 5500, conyuge: 1500, hijo: 1500 },
-  { nombre: "VAWA (CITIZEN)", precio: 6000, conyuge: null, hijo: 1500 },
-  { nombre: "VAWA (RESIDENT)", precio: 8000, conyuge: null, hijo: 1500 },
-  { nombre: "VISA FIANCE", precio: 2000, conyuge: null, hijo: 1500 },
-  { nombre: "WAIVER (IRREGULAR PRESENCE) I-601A", precio: 4000, conyuge: null, hijo: null },
-  { nombre: "WAIVER (FOR INADMISSIBILITY) I-601", precio: 4000, conyuge: null, hijo: null },
-  { nombre: "WAIVER (FOR DEPORTATION) I-212", precio: 4000, conyuge: null, hijo: null },
-  { nombre: "RENOVACIÓN DACA", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "TPS (NEW CUSTOMER)", precio: 2500, conyuge: 2000, hijo: null },
-  { nombre: "TPS (ACTIVE CLIENT)", precio: 2000, conyuge: 2000, hijo: null },
-  { nombre: "REQUEST FOR USCIS", precio: 2000, conyuge: null, hijo: null },
-  { nombre: "ADVANCE PAROLE", precio: 1500, conyuge: null, hijo: null },
-  { nombre: "ORGANIZED DEPORTATION", precio: 3000, conyuge: null, hijo: null },
-  { nombre: "VOLUNTARY DEPARTURE", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "STAY OF REMOVAL", precio: 3500, conyuge: null, hijo: null },
-  { nombre: "WORK PERMIT", precio: 1620, conyuge: null, hijo: null },
-  { nombre: "WORK PERMIT RENEWAL", precio: 870, conyuge: null, hijo: null },
-  { nombre: "FINGERPRINTS", precio: 1878, conyuge: null, hijo: null },
-  { nombre: "FOIA OUTSIDE THE US", precio: 880, conyuge: null, hijo: null },
-  { nombre: "FOIA", precio: 780, conyuge: null, hijo: null },
-  { nombre: "DISMISSAL I589 USCIS", precio: 5000, conyuge: null, hijo: null },
-  { nombre: "ASYLUM APPOINTMENT REDHEDULING", precio: 2500, conyuge: null, hijo: null },
-  { nombre: "ADJUSTMENT OF REFUGEE STATUS", precio: 4500, conyuge: 2000, hijo: 1500 },
-  { nombre: "ICE ACCOMPANIMENT BY LAWYER", precio: 2500, conyuge: null, hijo: null },
+  { nombre: "AFFIRMATIVE ASYLUM OUT OF THE YEAR (AA FUERA DEL AÑO)", precio: 10500, conyuge: 2000, hijos: 500, downpayment: 4000 },
+  { nombre: "AFFIRMATIVE ASYLUM FOLLOW-UP + EVIDENCE PACKAGE", precio: 7000, conyuge: null, hijos: null, downpayment: 2500 },
+  { nombre: "ASYLUM INTERVIEW PREPARATION + EVIDENCE PACKAGE (Menos 30 días)", precio: 4000, conyuge: null, hijos: null, downpayment: 2500 },
+  { nombre: "APPEARANCE AS ATTORNET (CREDIBLE FEAR INTERVIEW), proceedings in ICE", precio: 3500, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "FAMILY PETITION INTERVIEW", precio: 2500, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "DEFENSIVE ASYLUM", precio: 12500, conyuge: 2000, hijos: 500, downpayment: 5000 },
+  { nombre: "AFFIRMATIVE ASYLUM", precio: 10500, conyuge: 2000, hijos: 500, downpayment: 4000 },
+  { nombre: "CANCELLATION OF REMOVAL", precio: 10500, conyuge: null, hijos: null, downpayment: 3500 },
+  { nombre: "INDIVIDUAL COURT ATTORNEY REPRESENTATION (REPRESENTATION + AMENDMENT/RELIEF)", precio: 8500, conyuge: null, hijos: null, downpayment: 8500 },
+  { nombre: "APPEARANCE AS ATTORNEY WITH INTENT TO FILE A MOTION TO TERMINATED", precio: 5000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "REPRESENTATION OF DETAINEES", precio: 5000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "REPRESENTATION OF ATTORNEY (E61)", precio: 2500, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "LEGAL CALL", precio: 1000, conyuge: null, hijos: null, downpayment: 1000 },
+  { nombre: "ALTERNATIVE TO DETENTION", precio: 3000, conyuge: null, hijos: null, downpayment: 3000 },
+  { nombre: "BOND", precio: 4500, conyuge: null, hijos: null, downpayment: 4500 },
+  { nombre: "ATTORNEY REPRESENTATION / BAIL REQUEST", precio: 7000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "APPEAL (NEW CUSTOMER)", precio: 7000, conyuge: null, hijos: null, downpayment: 6500 },
+  { nombre: "APPEAL (ACTIVE CLIENT)", precio: 4500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "REOPEN (STAY OF REMOVAL)", precio: 6000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "REOPEN + I-589 (NON-ACTIVE CUSTOMER)", precio: 6000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "REOPEN + I-589 (ACTIVE CUSTOMER)", precio: 5000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "REQUEST FILE E-59", precio: 3500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "LEGAL FAMILY PETITION", precio: 8000, conyuge: 1500, hijos: 1500, downpayment: 2500 },
+  { nombre: "IRREGULAR COMPLETE FAMILY PETITION", precio: 9000, conyuge: null, hijos: 1500, downpayment: 2500 },
+  { nombre: "PAROLE IN PLACE (ARMY) (NEW CUSTOMER)", precio: 3000, conyuge: null, hijos: null, downpayment: 2500 },
+  { nombre: "PAROLE IN PLACE (ARMY) (ACTIVE CLIENT)", precio: 2500, conyuge: null, hijos: null, downpayment: 2500 },
+  { nombre: "FAMILY PETITION FOR PIP (MILITARY)", precio: 7000, conyuge: 1500, hijos: 1500, downpayment: 2500 },
+  { nombre: "IRREGULAR IMMEDIATE FAMILY PETITION (I - 130)", precio: 3000, conyuge: 1500, hijos: null, downpayment: 1500 },
+  { nombre: "FAMILY PETITION (PREFERENCE CATEGORY I-130)", precio: 3000, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "FAMILY PETITION FOR ASYLUM OR REFUGEE (I-730)", precio: 3000, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "FAMILY PETITION STAGE 2 (CONSULAR PROCESS) NVC", precio: 4000, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "MINOR LAW (STAGE 1: ORDER OF DEPENDENCY)", precio: 5000, conyuge: null, hijos: null, downpayment: 3500 },
+  { nombre: "MINOR LAW (STAGE 2: I-360 + I-765 PETITION FOR SPECIAL IMMIGRANT)", precio: 3500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "JUVENILE LAW (STAGE 3: I-485 ADJUSTMENT STATUS)", precio: 3500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "CUBAN ADJUSTMENT WITH NO CUT ADMISSION (I-485 STATUS ADJUSTMENT)", precio: 5000, conyuge: 1500, hijos: 1500, downpayment: 1500 },
+  { nombre: "RESIDENCE / ADJUSTMENT OF STATUS", precio: 4500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "RESIDENCE (CARD RENEWAL OR LOSS)", precio: 2500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "RENEWAL OF RESIDENCY + WITHDRAWAL OF CONDITIONS (FOR. I-751)", precio: 3000, conyuge: null, hijos: null, downpayment: 3000 },
+  { nombre: "STATUS ADJUSTEMENT + 245-I", precio: 5000, conyuge: null, hijos: null, downpayment: 2500 },
+  { nombre: "CITIZENSHIP PROCESS (N-400)", precio: 3500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "CITIZENSHIP PROCESS (N-600)", precio: 3500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "REPLACEMENT OF CITIZENSHIP", precio: 2000, conyuge: null, hijos: null, downpayment: 2000 },
+  { nombre: "APPEARANCE AS ATTORNEY, proceedings in USCIS (CRBA)", precio: 2500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "VISA U CERTIFICATION", precio: 2000, conyuge: null, hijos: null, downpayment: 2000 },
+  { nombre: "VISA U", precio: 5500, conyuge: 1500, hijos: 1500, downpayment: 1500 },
+  { nombre: "VISA T", precio: 5500, conyuge: 1500, hijos: 1500, downpayment: 1500 },
+  { nombre: "VAWA (CITIZEN)", precio: 6000, conyuge: null, hijos: 1500, downpayment: 1500 },
+  { nombre: "VAWA (RESIDENT)", precio: 8000, conyuge: null, hijos: 1500, downpayment: 1500 },
+  { nombre: "VISA FIANCE", precio: 2000, conyuge: null, hijos: 1500, downpayment: 1500 },
+  { nombre: "WAIVER (IRREGULAR PRESENCE) I-601A", precio: 4000, conyuge: null, hijos: null, downpayment: 2500 },
+  { nombre: "WAIVER (FOR INADMISSIBILITY) I-601", precio: 4000, conyuge: null, hijos: null, downpayment: 2500 },
+  { nombre: "WAIVER (FOR DEPORTATION) I-212", precio: 4000, conyuge: null, hijos: null, downpayment: 2500 },
+  { nombre: "RENOVACIÓN DACA", precio: 3500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "TPS (NEW CUSTOMER)", precio: 2500, conyuge: 2000, hijos: null, downpayment: 1500 },
+  { nombre: "TPS (ACTIVE CLIENT)", precio: 2000, conyuge: 2000, hijos: null, downpayment: 1500 },
+  { nombre: "REQUEST FOR USCIS", precio: 2000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "ADVANCE PAROLE", precio: 1500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "ORGANIZED DEPORTATION", precio: 3000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "VOLUNTARY DEPARTURE", precio: 3500, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "STAY OF REMOVAL", precio: 3500, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "WORK PERMIT", precio: 1620, conyuge: null, hijos: null, downpayment: 1500 },
+  { nombre: "WORK PERMIT RENEWAL", precio: 870, conyuge: null, hijos: null, downpayment: 750 },
+  { nombre: "FINGERPRINTS", precio: 1878, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "FOIA OUTSIDE THE US", precio: 880, conyuge: null, hijos: null, downpayment: 880 },
+  { nombre: "FOIA", precio: 780, conyuge: null, hijos: null, downpayment: 780 },
+  { nombre: "DISMISSAL I589 USCIS", precio: 5000, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "ASYLUM APPOINTMENT REDHEDULING", precio: 2500, conyuge: null, hijos: null, downpayment: null },
+  { nombre: "ADJUSTMENT OF REFUGEE STATUS", precio: 4500, conyuge: 2000, hijos: 1500, downpayment: 1500 },
+  { nombre: "ICE ACCOMPANIMENT BY LAWYER", precio: 2500, conyuge: null, hijos: null, downpayment: null },
 ];
 
-
-  const contratosFiltrados = contratos
+   const contratosFiltrados = contratos
   .filter((c) =>
     c.nombre.toLowerCase().includes(searchContrato.toLowerCase())
   )
@@ -146,14 +144,30 @@ function FormSections() {
   const openDerivados = () => setOpenModal("derivados");
   const openFaseDePago = () => setOpenModal("faseDePago");
   const openObservaciones = () => setOpenModal("observaciones");
-
-  // Calcular total
+  
+  // 👉 Función para calcular el total
   const calcularTotal = () => {
     if (!selectedContrato) return 0;
+
     let total = selectedContrato.precio;
+
+    // cónyuge
+    if (formData.derivados?.hasSpouse === "si" && selectedContrato.conyuge) {
+      total += selectedContrato.conyuge;
+    }
+
+    // hijos
+    if (formData.derivados?.hasChildren === "si" && selectedContrato.hijos) {
+    const cantidadHijos = Number(formData.derivados.numChildren) || 0;
+    total += cantidadHijos * selectedContrato.hijos;
+  }
+
+
+    // descuento
     if (tieneDescuento === "si" && montoDescuento > 0) {
       total -= montoDescuento;
     }
+
     return total;
   };
 
@@ -210,33 +224,15 @@ function FormSections() {
 
         {/* Secciones */}
         <div className="sections">
-          <div className="section-card" onClick={openOficinas}>
-            🏢 Oficinas
-          </div>
-          <div className="section-card" onClick={openDatosPersonales}>
-            👤 Datos Personales
-          </div>
-          <div className="section-card" onClick={openDerivados}>
-            👨‍👩‍👧 Derivados (Esposo/a e Hijos)
-          </div>
-          <div className="section-card" onClick={openTipoContrato}>
-            📑 Tipo de Contrato
-          </div>
-          <div className="section-card" onClick={openFaseDePago}>
-            💵 Down Payment
-          </div>
-          <div className="section-card" onClick={openObservaciones}>
-            💰 Pago de saldo
-          </div>
-          <div className="section-card" onClick={openObservaciones}>
-            📜 Carta de matrimonio
-          </div>
-          <div className="section-card" onClick={openObservaciones}>
-            ⚖️ Carta de corte próximo
-          </div>
-          <div className="section-card" onClick={openObservaciones}>
-            💳 Pago con tarjeta digital
-          </div>
+          <div className="section-card" onClick={openOficinas}>🏢 Oficinas</div>
+          <div className="section-card" onClick={openDatosPersonales}>👤 Datos Personales</div>
+          <div className="section-card" onClick={openDerivados}>👨‍👩‍👧 Derivados (Esposo/a e Hijos)</div>
+          <div className="section-card" onClick={openTipoContrato}>📑 Tipo de Contrato</div>
+          <div className="section-card" onClick={openFaseDePago}>💵 Down Payment</div>
+          <div className="section-card" onClick={openObservaciones}>💰 Pago de saldo</div>
+          <div className="section-card" onClick={openObservaciones}>📜 Carta de matrimonio</div>
+          <div className="section-card" onClick={openObservaciones}>⚖️ Carta de corte próximo</div>
+          <div className="section-card" onClick={openObservaciones}>💳 Pago con tarjeta digital</div>
         </div>
 
         {/* -------------------------------- */}
@@ -436,34 +432,89 @@ function FormSections() {
 
               // Validaciones
               if (!hasSpouse) {
-                Swal.fire({ toast: true, position: "bottom-end", icon: "error", title: "⚠️ Debe seleccionar si tiene esposo(a) o no", showConfirmButton: false, timer: 2500, timerProgressBar: true });
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: "⚠️ Debe seleccionar si tiene esposo(a) o no",
+                  showConfirmButton: false,
+                  timer: 2500,
+                  timerProgressBar: true,
+                });
                 return;
               }
               if (hasSpouse === "si" && !spouseName.trim()) {
-                Swal.fire({ toast: true, position: "bottom-end", icon: "error", title: "⚠️ Debe ingresar el nombre del esposo/a", showConfirmButton: false, timer: 2500, timerProgressBar: true });
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: "⚠️ Debe ingresar el nombre del esposo/a",
+                  showConfirmButton: false,
+                  timer: 2500,
+                  timerProgressBar: true,
+                });
                 return;
               }
               if (!hasChildren) {
-                Swal.fire({ toast: true, position: "bottom-end", icon: "error", title: "⚠️ Debe seleccionar si tiene hijos o no", showConfirmButton: false, timer: 2500, timerProgressBar: true });
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: "⚠️ Debe seleccionar si tiene hijos o no",
+                  showConfirmButton: false,
+                  timer: 2500,
+                  timerProgressBar: true,
+                });
                 return;
               }
               if (hasChildren === "si") {
                 if (!numChildren || numChildren <= 0) {
-                  Swal.fire({ toast: true, position: "bottom-end", icon: "error", title: "⚠️ Debe ingresar la cantidad de hijos", showConfirmButton: false, timer: 2500, timerProgressBar: true });
+                  Swal.fire({
+                    toast: true,
+                    position: "bottom-end",
+                    icon: "error",
+                    title: "⚠️ Debe ingresar la cantidad de hijos",
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                  });
                   return;
                 }
                 if (childrenNames.some((child) => !child.trim())) {
-                  Swal.fire({ toast: true, position: "bottom-end", icon: "error", title: "⚠️ Debe ingresar todos los nombres de los hijos", showConfirmButton: false, timer: 2500, timerProgressBar: true });
+                  Swal.fire({
+                    toast: true,
+                    position: "bottom-end",
+                    icon: "error",
+                    title: "⚠️ Debe ingresar todos los nombres de los hijos",
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                  });
                   return;
                 }
               }
 
-              const data = { hasSpouse, spouseName, hasChildren, numChildren, childrenNames };
+              // ✅ Guardar derivados con numChildren convertido a número
+              const data = {
+                hasSpouse,
+                spouseName,
+                hasChildren,
+                numChildren: Number(numChildren) || 0,
+                childrenNames,
+              };
               setFormData((prev) => ({ ...prev, derivados: data }));
               setCurrentStep(4);
               closeModal();
 
-              Swal.fire({ toast: true, position: "bottom-end", icon: "success", title: "✅ Derivados guardados con éxito", showConfirmButton: false, timer: 2000, timerProgressBar: true });
+              Swal.fire({
+                toast: true,
+                position: "bottom-end",
+                icon: "success",
+                title: "✅ Derivados guardados con éxito",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+              });
             }}
           >
             <label>
@@ -494,7 +545,7 @@ function FormSections() {
                 onChange={(e) => {
                   setHasChildren(e.target.value);
                   setChildrenNames([]);
-                  setNumChildren(0);
+                  setNumChildren(e.target.value === "si" ? 1 : 0); // ✅ inicia en 1 si dice Sí
                 }}
               >
                 <option value="" disabled>Seleccione</option>
@@ -542,6 +593,7 @@ function FormSections() {
           </form>
         </Modal>
 
+
         {/* ------------------------------------------ */}
         {/* Modal Tipo de Contrato (Paso 4 -> 5)       */}
         {/* ------------------------------------------ */}
@@ -567,7 +619,6 @@ function FormSections() {
                 return;
               }
 
-              // Guardar contrato con total
               const totalFinal = calcularTotal();
               setFormData((prev) => ({
                 ...prev,
@@ -593,7 +644,8 @@ function FormSections() {
               });
             }}
           >
-            <label>
+            {/* Buscar contrato */}
+            <label style={{ marginBottom: "15px" }}>
               Por favor seleccione el contrato a generar *
               <input
                 type="text"
@@ -604,6 +656,7 @@ function FormSections() {
               />
             </label>
 
+            {/* Lista de contratos */}
             <div className="select-list">
               {contratosFiltrados.length > 0 ? (
                 contratosFiltrados.map((c, idx) => (
@@ -612,27 +665,7 @@ function FormSections() {
                     className={`select-item ${
                       selectedContrato?.nombre === c.nombre ? "active" : ""
                     }`}
-                    onClick={() => {
-                      if (
-                        formData.tipoContrato?.contrato?.nombre &&
-                        formData.tipoContrato.contrato.nombre !== c.nombre
-                      ) {
-                        Swal.fire({
-                          title: "Ya guardaste un contrato",
-                          text: `¿Quieres cambiarlo por "${c.nombre}"?`,
-                          icon: "question",
-                          showCancelButton: true,
-                          confirmButtonText: "Sí, cambiar",
-                          cancelButtonText: "No",
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            setSelectedContrato(c);
-                          }
-                        });
-                      } else {
-                        setSelectedContrato(c);
-                      }
-                    }}
+                    onClick={() => setSelectedContrato(c)}
                   >
                     {c.nombre} — ${c.precio}
                   </div>
@@ -642,12 +675,34 @@ function FormSections() {
               )}
             </div>
 
+            {/* Mostrar info contrato seleccionado */}
             {selectedContrato && (
               <>
-                <p className="contrato-seleccionado">
-                  Seleccionado: {selectedContrato.nombre} —{" "}
-                  <strong>${selectedContrato.precio}</strong>
-                </p>
+                <div className="contrato-detalle">
+                  <h4>{selectedContrato.nombre}</h4>
+                  <p>
+                    <strong>Precio base:</strong> ${selectedContrato.precio}
+                  </p>
+
+                  <div className="extras">
+                    {selectedContrato.conyuge && (
+                      <p className="extra-item">
+                        👩‍❤️‍👨 <strong>Cónyuge:</strong> ${selectedContrato.conyuge}
+                      </p>
+                    )}
+                    {selectedContrato.hijos && (
+                      <p className="extra-item">
+                        👶 <strong>Hijos:</strong> $
+                        {(formData.derivados?.numChildren || 0) * selectedContrato.hijos}
+                      </p>
+                    )}
+                    {selectedContrato.downpayment && (
+                      <p className="extra-item">
+                        💵 <strong>Downpayment:</strong> ${selectedContrato.downpayment}
+                      </p>
+                    )}
+                  </div>
+                </div>
 
                 {/* Preguntar descuento */}
                 <label className="label-descuento">
@@ -685,13 +740,13 @@ function FormSections() {
                   </>
                 )}
 
-                {/* Mostrar total */}
+                {/* Total final */}
                 <p className="total-final">
-                  💰 Total a pagar: <strong>${calcularTotal()}</strong>
+                  💰 <strong>Total a pagar: ${calcularTotal()}</strong>
                   {tieneDescuento === "si" && autorizadoPor && (
                     <span className="total-autorizado">
                       {" "}
-                      (Descuento autorizado por: {autorizadoPor})
+                      (Autorizado por: {autorizadoPor})
                     </span>
                   )}
                 </p>
@@ -703,6 +758,10 @@ function FormSections() {
             </button>
           </form>
         </Modal>
+
+
+
+
 
         {/* ------------------------------------------ */}
         {/* Modal Fase de Pago (Paso 5 -> 6)           */}

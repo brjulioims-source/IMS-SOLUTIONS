@@ -235,4 +235,134 @@
   color: #6b7280;
   margin-left: 6px;
 }
+.contrato-detalle {
+  margin-top: 18px;
+  padding: 16px 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.contrato-detalle h4 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 6px;
+}
+
+.contrato-detalle p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.extras {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* dos columnas ordenadas */
+  gap: 8px 20px;
+}
+
+.extra-item {
+  font-size: 14px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.extra-item span {
+  font-weight: 600;
+  color: #111827;
+}
+
+.total-final {
+  margin-top: 18px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  background: #f3f4f6;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.total-autorizado {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  display: block;
+  margin-top: 4px;
+}
+.contrato-detalle {
+  margin-top: 18px;
+  padding: 16px 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.contrato-detalle h4 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 6px;
+}
+
+.contrato-detalle p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.extras {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* dos columnas ordenadas */
+  gap: 8px 20px;
+}
+
+.extra-item {
+  font-size: 14px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.extra-item span {
+  font-weight: 600;
+  color: #111827;
+}
+
+.total-final {
+  margin-top: 18px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  background: #f3f4f6;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.total-autorizado {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  display: block;
+  margin-top: 4px;
+}
 
