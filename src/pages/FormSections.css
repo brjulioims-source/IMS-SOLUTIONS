@@ -116,28 +116,63 @@
   background: #a5b4fc;
   cursor: not-allowed;
 }
-
-/* Grid oficinas */
+/* Grid de oficinas */
 .oficinas-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 20px;
-  margin-top: 12px;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas fijas */
+  gap: 20px 40px; /* espacio entre tarjetas */
+  margin-top: 20px;
+  justify-items: center;
 }
 
-.oficinas-grid label {
+/* Tarjeta compacta */
+.oficina-card {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 14px;
+  justify-content: center;
+  font-size: 13px; /* más pequeño */
+  font-weight: 500;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px; /* más compacto */
+  width: 140px;  /* menos ancho */
+  height: 45px;  /* menos alto */
   cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
 }
 
-.oficinas-grid input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
+/* Hover */
+.oficina-card:hover {
+  background: #eef2ff;
+  border-color: #6366f1;
+  transform: translateY(-2px);
 }
+
+/* Ocultar radio nativo */
+.oficina-card input[type="radio"] {
+  display: none;
+}
+
+/* Estado seleccionado */
+.oficina-card input[type="radio"]:checked + span {
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 4px 8px;
+  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.25);
+}
+
+/* Texto */
+.oficina-card span {
+  width: 100%;
+  text-align: center;
+  border-radius: 6px;
+}
+
+
 
 /* Modal grande */
 .modal-content.large {

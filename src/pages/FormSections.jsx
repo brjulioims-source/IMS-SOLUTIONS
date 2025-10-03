@@ -18,7 +18,7 @@ function FormSections() {
     datosPersonales: {},
     derivados: {},
     tipoContrato: {},
-    faseDePago: {},
+    downPayment: {},
     observaciones: {},
   });
 
@@ -153,7 +153,7 @@ function FormSections() {
   const openOficinas = () => setOpenModal("oficinas");
   const openDatosPersonales = () => setOpenModal("datosPersonales");
   const openDerivados = () => setOpenModal("derivados");
-  const openFaseDePago = () => setOpenModal("faseDePago");
+  const openDownPayment = () => setOpenModal("downPayment");
   const openObservaciones = () => setOpenModal("observaciones");
   
   // 👉 Función para calcular el total
@@ -236,62 +236,62 @@ function FormSections() {
           <div className="section-card" onClick={openDatosPersonales}>👤 Datos Personales</div>
           <div className="section-card" onClick={openDerivados}>👨‍👩‍👧 Derivados (Esposo/a e Hijos)</div>
           <div className="section-card" onClick={openTipoContrato}>📑 Tipo de Contrato</div>
-          <div className="section-card" onClick={openFaseDePago}>💵 Down Payment</div>
+          <div className="section-card" onClick={openDownPayment}>💵 Down Payment</div>
           <div className="section-card" onClick={openObservaciones}>💰 Pago de saldo</div>
           <div className="section-card" onClick={openObservaciones}>📜 Carta de matrimonio</div>
           <div className="section-card" onClick={openObservaciones}>⚖️ Carta de corte próximo</div>
           <div className="section-card" onClick={openObservaciones}>💳 Pago con tarjeta digital</div>
         </div>
 
-        {/* -------------------------------- */}
-        {/* Modal Oficinas (Paso 1 -> 2)     */}
-        {/* -------------------------------- */}
-        <Modal
-          isOpen={openModal === "oficinas"}
-          onClose={closeModal}
-          title="Formulario de Oficinas"
+      {/* -------------------------------- */}
+      {/* Modal Oficinas (Paso 1 -> 2)     */}
+      {/* -------------------------------- */}
+      <Modal
+        isOpen={openModal === "oficinas"}
+        onClose={closeModal}
+        title="Formulario de Oficinas"
+      >
+        <form
+          className="form"
+          onSubmit={(e) =>
+            handleSubmit(e, "oficinas", 1, [
+              e.target.querySelector("input[type='radio']:checked")?.value || "",
+            ])
+          }
         >
-          <form
-            className="form"
-            onSubmit={(e) =>
-              handleSubmit(e, "oficinas", 1, [
-                e.target.querySelector("input[type='radio']:checked")?.value || "",
-              ])
-            }
-          >
-            <p>Por favor seleccione la oficina a la cual vincular este contrato:</p>
+          <p>Por favor seleccione la oficina a la cual vincular este contrato:</p>
 
-            <div className="oficinas-grid">
-              {[
-                "Houston",
-                "Gainesville",
-                "Kissimmee 1",
-                "Norcross",
-                "Tampa",
-                "Renton",
-                "Austin",
-                "San Antonio",
-                "San Juan",
-                "Mayagüez",
-                "New Jersey",
-                "Chula Vista",
-                "Hackensack",
-              ].map((oficina) => (
-                <label key={oficina}>
-                  <input
-                    type="radio"
-                    name="oficina"
-                    value={oficina}
-                    defaultChecked={formData.oficinas?.oficina === oficina}
-                  />
-                  {oficina}
-                </label>
-              ))}
-            </div>
+          <div className="oficinas-grid">
+            {[
+              "Houston",
+              "Gainesville",
+              "Kissimmee 1",
+              "Norcross",
+              "Tampa",
+              "Renton",
+              "Austin",
+              "San Antonio",
+              "San Juan",
+              "Mayagüez",
+              "New Jersey",
+              "Chula Vista",
+              "Hackensack",
+            ].map((oficina) => (
+              <label key={oficina} className="oficina-card">
+                <input
+                  type="radio"
+                  name="oficina"
+                  value={oficina}
+                  defaultChecked={formData.oficinas?.oficina === oficina}
+                />
+                <span>🏢 {oficina}</span>
+              </label>
+            ))}
+          </div>
 
-            <button type="submit" className="btn-guardar">Guardar</button>
-          </form>
-        </Modal>
+          <button type="submit" className="btn-guardar">Guardar</button>
+        </form>
+      </Modal>
 
         {/* ------------------------------------------ */}
         {/* Modal Datos Personales (Paso 2 -> 3)       */}
@@ -567,18 +567,21 @@ function FormSections() {
                 <label>
                   ¿Cuántos hijos tienes? (máx. 12) *
                   <input
-                    type="number"
-                    min="1"
-                    max="12"
+                    type="text"
+                    inputMode="numeric" 
+                    pattern="[0-9]*" 
                     value={numChildren}
+                    onInput={(e) => {
+                      e.target.value = e.target.value.replace(/[^0-9]/g, ""); // ✅ fuerza solo dígitos
+                    }}
                     onChange={(e) => {
                       const value = Math.min(parseInt(e.target.value, 10) || 0, 12);
                       setNumChildren(value);
                       setChildrenNames(Array(value).fill(""));
                     }}
+                    placeholder="Ej: 2"
                   />
                 </label>
-
                 {Array.from({ length: numChildren }, (_, i) => (
                   <label key={i}>
                     Nombre del hijo {i + 1} *
@@ -771,13 +774,13 @@ function FormSections() {
           </form>
         </Modal>
 
-{/* ------------------------------------------ */}
-{/* Modal Fase de Pago (Paso 5 -> 6)           */}
+      {/* ------------------------------------------ */}
+{/* Modal Downpayment (Paso 5 -> 6)            */}
 {/* ------------------------------------------ */}
 <Modal
-  isOpen={openModal === "faseDePago"}
+  isOpen={openModal === "downPayment"}
   onClose={closeModal}
-  title="Formulario de Fase de Pago"
+  title="Formulario de Downpayment"
 >
   <form
     className="form form-grid"
@@ -797,12 +800,11 @@ function FormSections() {
         return;
       }
 
-      // Tomamos solo cuotas "usadas" (monto > 0)
       const cuotasValidas = cuotas.filter((c) => c.monto > 0);
       const totalCuotas = cuotasValidas.reduce((acc, c) => acc + c.monto, 0);
       const totalDown = formData.tipoContrato.contrato.downpayment;
 
-      // ✅ Validar: toda cuota con monto > 0 debe tener fecha (siempre)
+      // Validar fechas en cuotas con monto
       if (cuotasValidas.some((c) => !c.fecha)) {
         Swal.fire({
           toast: true,
@@ -816,7 +818,6 @@ function FormSections() {
         return;
       }
 
-      // Estado del pago (permitimos guardar aunque sobre o falte)
       let estado = "pendiente";
       if (totalCuotas === totalDown) estado = "completo";
       else if (totalCuotas > totalDown) estado = "excedente";
@@ -824,7 +825,7 @@ function FormSections() {
 
       setFormData((prev) => ({
         ...prev,
-        faseDePago: { cuotas: cuotasValidas, observaciones, estado },
+        downPayment: { cuotas: cuotasValidas, observaciones, estado },
       }));
 
       setCurrentStep(6);
@@ -849,13 +850,13 @@ function FormSections() {
 
     {/* Número de cuotas */}
     <label>
-      ¿En cuántas cuotas desea pagar? (máx. 7)
+      ¿En cuántas cuotas desea pagar? (máx. 6)
       <input
         type="text"
         value={numCuotas}
         onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ""); }}
         onChange={(e) => {
-          const value = Math.min(parseInt(e.target.value, 10) || 0, 7);
+          const value = Math.min(parseInt(e.target.value, 10) || 0, 6);
           setNumCuotas(value);
           const newCuotas = Array.from({ length: value }, () => ({ monto: 0, fecha: "" }));
           setCuotas(newCuotas);
@@ -888,7 +889,29 @@ function FormSections() {
               onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ""); }}
               onChange={(e) => {
                 const newCuotas = [...cuotas];
-                newCuotas[idx].monto = parseInt(e.target.value, 10) || 0;
+                const nuevoMonto = parseInt(e.target.value, 10) || 0;
+                newCuotas[idx].monto = nuevoMonto;
+
+                const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
+
+                if (idx < newCuotas.length - 1) {
+                  const sumaAnterior = newCuotas
+                    .slice(0, idx + 1)
+                    .reduce((acc, q) => acc + (q.monto || 0), 0);
+                  const restante = totalDown - sumaAnterior;
+
+                  const cuotasRestantes = newCuotas.length - (idx + 1);
+                  if (cuotasRestantes > 0) {
+                    const base = Math.floor(restante / cuotasRestantes);
+                    const resto = restante % cuotasRestantes;
+
+                    for (let i = idx + 1; i < newCuotas.length; i++) {
+                      newCuotas[i].monto =
+                        base + (i - (idx + 1) < resto ? 1 : 0);
+                    }
+                  }
+                }
+
                 setCuotas(newCuotas);
               }}
               placeholder="Ej: 1000"
@@ -955,6 +978,7 @@ function FormSections() {
     </button>
   </form>
 </Modal>
+
 
 
         {/* ------------------------------------------ */}
