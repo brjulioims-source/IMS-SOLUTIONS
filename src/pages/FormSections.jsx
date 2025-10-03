@@ -53,6 +53,17 @@ function FormSections() {
   }, [openModal, formData]);
 
   // -----------------------------
+  // Estados: Fase de Pago (Down Payment)
+  const [numCuotas, setNumCuotas] = useState(0);   // cuántas cuotas eligió el usuario
+  const [cuotas, setCuotas] = useState([]);        // array con los datos de cada cuota
+
+  // -----------------------------
+  // Estados: Observaciones y otros documentos
+  const [observaciones, setObservaciones] = useState("");
+
+
+
+  // -----------------------------
   // Lista de contratos (filtro y selección)
   // -----------------------------
   const contratos = [
@@ -161,13 +172,10 @@ function FormSections() {
     const cantidadHijos = Number(formData.derivados.numChildren) || 0;
     total += cantidadHijos * selectedContrato.hijos;
   }
-
-
     // descuento
     if (tieneDescuento === "si" && montoDescuento > 0) {
       total -= montoDescuento;
     }
-
     return total;
   };
 
@@ -763,58 +771,191 @@ function FormSections() {
           </form>
         </Modal>
 
-        {/* ------------------------------------------ */}
-        {/* Modal Fase de Pago (Paso 5 -> 6)           */}
-        {/* ------------------------------------------ */}
-        <Modal
-          isOpen={openModal === "faseDePago"}
-          onClose={closeModal}
-          title="Formulario de Fase de Pago"
+{/* ------------------------------------------ */}
+{/* Modal Fase de Pago (Paso 5 -> 6)           */}
+{/* ------------------------------------------ */}
+<Modal
+  isOpen={openModal === "faseDePago"}
+  onClose={closeModal}
+  title="Formulario de Fase de Pago"
+>
+  <form
+    className="form form-grid"
+    onSubmit={(e) => {
+      e.preventDefault();
+
+      if (!formData.tipoContrato?.contrato?.downpayment) {
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "error",
+          title: "⚠️ Debe seleccionar un contrato con Downpayment",
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true,
+        });
+        return;
+      }
+
+      // Tomamos solo cuotas "usadas" (monto > 0)
+      const cuotasValidas = cuotas.filter((c) => c.monto > 0);
+      const totalCuotas = cuotasValidas.reduce((acc, c) => acc + c.monto, 0);
+      const totalDown = formData.tipoContrato.contrato.downpayment;
+
+      // ✅ Validar: toda cuota con monto > 0 debe tener fecha (siempre)
+      if (cuotasValidas.some((c) => !c.fecha)) {
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "error",
+          title: "⚠️ Ingrese la fecha para cada cuota con monto",
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true,
+        });
+        return;
+      }
+
+      // Estado del pago (permitimos guardar aunque sobre o falte)
+      let estado = "pendiente";
+      if (totalCuotas === totalDown) estado = "completo";
+      else if (totalCuotas > totalDown) estado = "excedente";
+      else estado = "incompleto";
+
+      setFormData((prev) => ({
+        ...prev,
+        faseDePago: { cuotas: cuotasValidas, observaciones, estado },
+      }));
+
+      setCurrentStep(6);
+      closeModal();
+
+      Swal.fire({
+        toast: true,
+        position: "bottom-end",
+        icon: "success",
+        title: "✅ Fase de Pago guardada con éxito",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+    }}
+  >
+    {/* Downpayment del contrato */}
+    <p>
+      💵 <strong>Downpayment total:</strong>{" "}
+      ${formData.tipoContrato?.contrato?.downpayment || 0}
+    </p>
+
+    {/* Número de cuotas */}
+    <label>
+      ¿En cuántas cuotas desea pagar? (máx. 7)
+      <input
+        type="text"
+        value={numCuotas}
+        onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ""); }}
+        onChange={(e) => {
+          const value = Math.min(parseInt(e.target.value, 10) || 0, 7);
+          setNumCuotas(value);
+          const newCuotas = Array.from({ length: value }, () => ({ monto: 0, fecha: "" }));
+          setCuotas(newCuotas);
+        }}
+        placeholder="Ej: 3"
+      />
+    </label>
+
+    {/* Campos dinámicos de cuotas */}
+    {cuotas.map((c, idx) => {
+      const totalActual = cuotas.reduce((acc, q) => acc + (q.monto || 0), 0);
+      const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
+
+      // Si ya se completó el total, ocultar cuotas vacías siguientes
+      if (totalActual >= totalDown && (c.monto === 0 && !c.fecha)) {
+        return null;
+      }
+
+      return (
+        <div
+          key={idx}
+          className="cuota-row"
+          style={{ display: "flex", gap: "10px", alignItems: "center" }}
         >
-          <form
-            className="form form-grid"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const form = new FormData(e.target);
-              const monto = (form.get("monto") || "").toString().trim();
+          <label style={{ flex: 1 }}>
+            Cuota {idx + 1} (USD)
+            <input
+              type="text"
+              value={String(c.monto ?? "")}
+              onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ""); }}
+              onChange={(e) => {
+                const newCuotas = [...cuotas];
+                newCuotas[idx].monto = parseInt(e.target.value, 10) || 0;
+                setCuotas(newCuotas);
+              }}
+              placeholder="Ej: 1000"
+            />
+          </label>
+          <label style={{ flex: 1 }}>
+            Fecha
+            <input
+              type="date"
+              value={c.fecha}
+              onChange={(e) => {
+                const newCuotas = [...cuotas];
+                newCuotas[idx].fecha = e.target.value;
+                setCuotas(newCuotas);
+              }}
+            />
+          </label>
+        </div>
+      );
+    })}
 
-              if (!monto) {
-                Swal.fire({ toast: true, position: "bottom-end", icon: "error", title: "⚠️ Debe ingresar el monto", showConfirmButton: false, timer: 2500, timerProgressBar: true });
-                return;
-              }
+    {/* Observaciones */}
+    <label style={{ gridColumn: "1 / -1" }}>
+      Observaciones
+      <textarea
+        rows="3"
+        placeholder="Notas adicionales, ejemplo: Cliente adelantó el pago"
+        value={observaciones}
+        onChange={(e) => setObservaciones(e.target.value)}
+        style={{
+          padding: "10px",
+          borderRadius: "6px",
+          border: "1px solid #ddd",
+          resize: "none",
+        }}
+      />
+    </label>
 
-              const data = Object.fromEntries(form.entries());
-              setFormData((prev) => ({ ...prev, faseDePago: data }));
-              setCurrentStep(6);
-              closeModal();
+    {/* Vista previa del total */}
+    {cuotas.length > 0 && (() => {
+      const totalCuotas = cuotas.reduce((acc, c) => acc + (c.monto || 0), 0);
+      const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
+      const diferencia = totalDown - totalCuotas;
 
-              Swal.fire({ toast: true, position: "bottom-end", icon: "success", title: "✅ Fase de Pago guardada con éxito", showConfirmButton: false, timer: 2000, timerProgressBar: true });
-            }}
-          >
-            <label>
-              Monto (USD) *
-              <input name="monto" type="number" min="0" step="0.01" placeholder="Ej: 1200.00" defaultValue={formData.faseDePago?.monto || ""} />
-            </label>
+      let previewClass = "total-preview";
+      if (diferencia === 0) previewClass += " success";
+      else if (diferencia > 0) previewClass += " warning";
+      else previewClass += " error";
 
-            <label>
-              Método de pago
-              <select name="metodo" defaultValue={formData.faseDePago?.metodo || ""}>
-                <option value="">Seleccione</option>
-                <option>Tarjeta</option>
-                <option>Efectivo</option>
-                <option>Transferencia</option>
-                <option>Otro</option>
-              </select>
-            </label>
+      return (
+        <div className={previewClass}>
+          <p>
+            💰 <strong>Total ingresado:</strong> ${totalCuotas} / ${totalDown}
+          </p>
+          {diferencia > 0 && <span>⚠️ Faltan ${diferencia}</span>}
+          {diferencia < 0 && <span>⚠️ Se pasó por ${Math.abs(diferencia)}</span>}
+          {diferencia === 0 && <span>✅ Cuadra exacto</span>}
+        </div>
+      );
+    })()}
 
-            <label>
-              Notas
-              <input name="nota" type="text" placeholder="Opcional" defaultValue={formData.faseDePago?.nota || ""} />
-            </label>
+    <button type="submit" className="btn-guardar">
+      Guardar
+    </button>
+  </form>
+</Modal>
 
-            <button type="submit" className="btn-guardar">Guardar</button>
-          </form>
-        </Modal>
 
         {/* ------------------------------------------ */}
         {/* Modal Observaciones (Paso 6 -> 7)          */}
