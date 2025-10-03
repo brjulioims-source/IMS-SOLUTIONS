@@ -685,12 +685,16 @@ function FormSections() {
                   </p>
 
                   <div className="extras">
-                    {selectedContrato.conyuge && (
+                   {/* ✅ Cónyuge (solo aparece si en derivados elegiste "Sí") */}
+                  {selectedContrato.conyuge &&
+                    formData.derivados?.hasSpouse === "si" && (
                       <p className="extra-item">
                         👩‍❤️‍👨 <strong>Cónyuge:</strong> ${selectedContrato.conyuge}
                       </p>
                     )}
-                    {selectedContrato.hijos && (
+                                      {/* ✅ Hijos (solo aparecen si en derivados elegiste "Sí") */}
+                  {selectedContrato.hijos &&
+                    formData.derivados?.hasChildren === "si" && (
                       <p className="extra-item">
                         👶 <strong>Hijos:</strong> $
                         {(formData.derivados?.numChildren || 0) * selectedContrato.hijos}
@@ -758,10 +762,6 @@ function FormSections() {
             </button>
           </form>
         </Modal>
-
-
-
-
 
         {/* ------------------------------------------ */}
         {/* Modal Fase de Pago (Paso 5 -> 6)           */}
