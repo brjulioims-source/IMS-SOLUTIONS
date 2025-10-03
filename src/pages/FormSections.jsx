@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "../components/modal/Modal";
 import DashboardLayout from "../layouts/DashboardLayout";
 import StepProgress from "../components/StepProgress";
@@ -35,17 +35,27 @@ function FormSections() {
   // Estados: Tipo de Contrato
   // -----------------------------
   const [searchContrato, setSearchContrato] = useState("");
-  const [selectedContrato, setSelectedContrato] = useState(null);
-
-  // Estado para el descuento
+  const [selectedContrato, setSelectedContrato] = useState(
+    formData.tipoContrato?.contrato || null
+  );
   const [tieneDescuento, setTieneDescuento] = useState("no");
   const [autorizadoPor, setAutorizadoPor] = useState("");
   const [montoDescuento, setMontoDescuento] = useState(0);
 
+  // 👇 este useEffect va aquí mismo
+  useEffect(() => {
+    if (openModal === "tipoContrato" && formData.tipoContrato) {
+      setSelectedContrato(formData.tipoContrato.contrato || null);
+      setTieneDescuento(formData.tipoContrato.tieneDescuento || "no");
+      setAutorizadoPor(formData.tipoContrato.autorizadoPor || "");
+      setMontoDescuento(formData.tipoContrato.montoDescuento || 0);
+    }
+  }, [openModal, formData]);
 
   // -----------------------------
   // Lista de contratos (nombre + precio)
   // -----------------------------
+
   const contratos = [
   { nombre: "AFFIRMATIVE ASYLUM OUT OF THE YEAR (AA FUERA DEL AÑO)", precio: 10500, conyuge: 2000, hijo: 500 },
   { nombre: "AFFIRMATIVE ASYLUM FOLLOW-UP + EVIDENCE PACKAGE", precio: 7000, conyuge: null, hijo: null },
@@ -137,16 +147,26 @@ function FormSections() {
   const openFaseDePago = () => setOpenModal("faseDePago");
   const openObservaciones = () => setOpenModal("observaciones");
 
-  const openTipoContrato = () => {
-    // Inicializa la selección con lo ya guardado (si existe)
-    if (formData.tipoContrato?.nombre) {
-      setSelectedContrato(formData.tipoContrato);
-    } else {
-      setSelectedContrato(null);
+  // Calcular total
+  const calcularTotal = () => {
+    if (!selectedContrato) return 0;
+    let total = selectedContrato.precio;
+    if (tieneDescuento === "si" && montoDescuento > 0) {
+      total -= montoDescuento;
     }
-    setSearchContrato("");
-    setOpenModal("tipoContrato");
+    return total;
   };
+
+    const openTipoContrato = () => {
+      // Inicializa la selección con lo ya guardado (si existe)
+      if (formData.tipoContrato?.nombre) {
+        setSelectedContrato(formData.tipoContrato);
+      } else {
+        setSelectedContrato(null);
+      }
+      setSearchContrato("");
+      setOpenModal("tipoContrato");
+    };
 
   // Validación genérica
   const handleSubmit = (e, stepKey, stepNumber, fields) => {
@@ -203,7 +223,7 @@ function FormSections() {
             📑 Tipo de Contrato
           </div>
           <div className="section-card" onClick={openFaseDePago}>
-            💵 Fase de pago
+            💵 Down Payment
           </div>
           <div className="section-card" onClick={openObservaciones}>
             💰 Pago de saldo
@@ -547,9 +567,17 @@ function FormSections() {
                 return;
               }
 
+              // Guardar contrato con total
+              const totalFinal = calcularTotal();
               setFormData((prev) => ({
                 ...prev,
-                tipoContrato: selectedContrato,
+                tipoContrato: {
+                  contrato: selectedContrato,
+                  tieneDescuento,
+                  autorizadoPor,
+                  montoDescuento,
+                  totalFinal,
+                },
               }));
               setCurrentStep(5);
               closeModal();
@@ -565,7 +593,7 @@ function FormSections() {
               });
             }}
           >
-            <label style={{ marginBottom: "12px", display: "block" }}>
+            <label>
               Por favor seleccione el contrato a generar *
               <input
                 type="text"
@@ -586,8 +614,8 @@ function FormSections() {
                     }`}
                     onClick={() => {
                       if (
-                        formData.tipoContrato?.nombre &&
-                        formData.tipoContrato.nombre !== c.nombre
+                        formData.tipoContrato?.contrato?.nombre &&
+                        formData.tipoContrato.contrato.nombre !== c.nombre
                       ) {
                         Swal.fire({
                           title: "Ya guardaste un contrato",
@@ -614,40 +642,60 @@ function FormSections() {
               )}
             </div>
 
-            {/* Bloque de detalles y total */}
             {selectedContrato && (
-              <div className="select-details">
-                <p>
-                  <strong>Contrato:</strong> {selectedContrato.nombre}
+              <>
+                <p className="contrato-seleccionado">
+                  Seleccionado: {selectedContrato.nombre} —{" "}
+                  <strong>${selectedContrato.precio}</strong>
                 </p>
-                <p>Precio base: ${selectedContrato.precio}</p>
 
-                {formData.derivados?.hasSpouse === "si" && (
-                  <p>+ Cónyuge: ${selectedContrato.conyuge || 0}</p>
+                {/* Preguntar descuento */}
+                <label className="label-descuento">
+                  ¿Tiene descuento?
+                  <select
+                    value={tieneDescuento}
+                    onChange={(e) => setTieneDescuento(e.target.value)}
+                  >
+                    <option value="no">No</option>
+                    <option value="si">Sí</option>
+                  </select>
+                </label>
+
+                {tieneDescuento === "si" && (
+                  <>
+                    <label>
+                      Autorizado por:
+                      <input
+                        type="text"
+                        placeholder="Nombre del autorizador"
+                        value={autorizadoPor}
+                        onChange={(e) => setAutorizadoPor(e.target.value)}
+                      />
+                    </label>
+
+                    <label>
+                      Monto del descuento (USD):
+                      <input
+                        type="number"
+                        min="0"
+                        value={montoDescuento}
+                        onChange={(e) => setMontoDescuento(Number(e.target.value))}
+                      />
+                    </label>
+                  </>
                 )}
 
-                {formData.derivados?.hasChildren === "si" &&
-                  formData.derivados?.numChildren > 0 && (
-                    <p>
-                      + Hijos ({formData.derivados.numChildren}): $
-                      {(selectedContrato.hijo || 0) *
-                        formData.derivados.numChildren}
-                    </p>
+                {/* Mostrar total */}
+                <p className="total-final">
+                  💰 Total a pagar: <strong>${calcularTotal()}</strong>
+                  {tieneDescuento === "si" && autorizadoPor && (
+                    <span className="total-autorizado">
+                      {" "}
+                      (Descuento autorizado por: {autorizadoPor})
+                    </span>
                   )}
-
-                <p style={{ fontWeight: "bold", marginTop: "8px" }}>
-                  Total: $
-                  {selectedContrato.precio +
-                    (formData.derivados?.hasSpouse === "si"
-                      ? selectedContrato.conyuge || 0
-                      : 0) +
-                    (formData.derivados?.hasChildren === "si" &&
-                    formData.derivados?.numChildren
-                      ? (selectedContrato.hijo || 0) *
-                        formData.derivados.numChildren
-                      : 0)}
                 </p>
-              </div>
+              </>
             )}
 
             <button type="submit" className="btn-guardar">
@@ -655,8 +703,6 @@ function FormSections() {
             </button>
           </form>
         </Modal>
-
-
 
         {/* ------------------------------------------ */}
         {/* Modal Fase de Pago (Paso 5 -> 6)           */}
