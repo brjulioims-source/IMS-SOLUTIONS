@@ -774,7 +774,10 @@ function FormSections() {
           </form>
         </Modal>
 
-      {/* ------------------------------------------ */}
+        {/* ------------------------------------------ */}
+        {/* Modal Downpayment (Paso 5 -> 6)            */}
+        {/* ------------------------------------------ */}
+        {/* ------------------------------------------ */}
 {/* Modal Downpayment (Paso 5 -> 6)            */}
 {/* ------------------------------------------ */}
 <Modal
@@ -804,7 +807,7 @@ function FormSections() {
       const totalCuotas = cuotasValidas.reduce((acc, c) => acc + c.monto, 0);
       const totalDown = formData.tipoContrato.contrato.downpayment;
 
-      // Validar fechas en cuotas con monto
+      // Validar fechas
       if (cuotasValidas.some((c) => !c.fecha)) {
         Swal.fire({
           toast: true,
@@ -818,10 +821,22 @@ function FormSections() {
         return;
       }
 
-      let estado = "pendiente";
-      if (totalCuotas === totalDown) estado = "completo";
-      else if (totalCuotas > totalDown) estado = "excedente";
-      else estado = "incompleto";
+      // ✅ Validar que el total sea exacto
+      if (totalCuotas !== totalDown) {
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "error",
+          title: `⚠️ El total ingresado ($${totalCuotas}) debe coincidir con el Downpayment ($${totalDown})`,
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+        return;
+      }
+
+      // Estado del pago
+      const estado = totalCuotas === totalDown ? "completo" : "pendiente";
 
       setFormData((prev) => ({
         ...prev,
@@ -854,11 +869,16 @@ function FormSections() {
       <input
         type="text"
         value={numCuotas}
-        onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ""); }}
+        onInput={(e) => {
+          e.target.value = e.target.value.replace(/[^0-9]/g, "");
+        }}
         onChange={(e) => {
           const value = Math.min(parseInt(e.target.value, 10) || 0, 6);
           setNumCuotas(value);
-          const newCuotas = Array.from({ length: value }, () => ({ monto: 0, fecha: "" }));
+          const newCuotas = Array.from({ length: value }, () => ({
+            monto: 0,
+            fecha: "",
+          }));
           setCuotas(newCuotas);
         }}
         placeholder="Ej: 3"
@@ -866,72 +886,42 @@ function FormSections() {
     </label>
 
     {/* Campos dinámicos de cuotas */}
-    {cuotas.map((c, idx) => {
-      const totalActual = cuotas.reduce((acc, q) => acc + (q.monto || 0), 0);
-      const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
-
-      // Si ya se completó el total, ocultar cuotas vacías siguientes
-      if (totalActual >= totalDown && (c.monto === 0 && !c.fecha)) {
-        return null;
-      }
-
-      return (
-        <div
-          key={idx}
-          className="cuota-row"
-          style={{ display: "flex", gap: "10px", alignItems: "center" }}
-        >
-          <label style={{ flex: 1 }}>
-            Cuota {idx + 1} (USD)
-            <input
-              type="text"
-              value={String(c.monto ?? "")}
-              onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ""); }}
-              onChange={(e) => {
-                const newCuotas = [...cuotas];
-                const nuevoMonto = parseInt(e.target.value, 10) || 0;
-                newCuotas[idx].monto = nuevoMonto;
-
-                const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
-
-                if (idx < newCuotas.length - 1) {
-                  const sumaAnterior = newCuotas
-                    .slice(0, idx + 1)
-                    .reduce((acc, q) => acc + (q.monto || 0), 0);
-                  const restante = totalDown - sumaAnterior;
-
-                  const cuotasRestantes = newCuotas.length - (idx + 1);
-                  if (cuotasRestantes > 0) {
-                    const base = Math.floor(restante / cuotasRestantes);
-                    const resto = restante % cuotasRestantes;
-
-                    for (let i = idx + 1; i < newCuotas.length; i++) {
-                      newCuotas[i].monto =
-                        base + (i - (idx + 1) < resto ? 1 : 0);
-                    }
-                  }
-                }
-
-                setCuotas(newCuotas);
-              }}
-              placeholder="Ej: 1000"
-            />
-          </label>
-          <label style={{ flex: 1 }}>
-            Fecha
-            <input
-              type="date"
-              value={c.fecha}
-              onChange={(e) => {
-                const newCuotas = [...cuotas];
-                newCuotas[idx].fecha = e.target.value;
-                setCuotas(newCuotas);
-              }}
-            />
-          </label>
-        </div>
-      );
-    })}
+    {cuotas.map((c, idx) => (
+      <div
+        key={idx}
+        className="cuota-row"
+        style={{ display: "flex", gap: "10px", alignItems: "center" }}
+      >
+        <label style={{ flex: 1 }}>
+          Cuota {idx + 1} (USD)
+          <input
+            type="text"
+            value={String(c.monto ?? "")}
+            onInput={(e) => {
+              e.target.value = e.target.value.replace(/[^0-9]/g, "");
+            }}
+            onChange={(e) => {
+              const newCuotas = [...cuotas];
+              newCuotas[idx].monto = parseInt(e.target.value, 10) || 0;
+              setCuotas(newCuotas);
+            }}
+            placeholder="Ej: 1000"
+          />
+        </label>
+        <label style={{ flex: 1 }}>
+          Fecha
+          <input
+            type="date"
+            value={c.fecha}
+            onChange={(e) => {
+              const newCuotas = [...cuotas];
+              newCuotas[idx].fecha = e.target.value;
+              setCuotas(newCuotas);
+            }}
+          />
+        </label>
+      </div>
+    ))}
 
     {/* Observaciones */}
     <label style={{ gridColumn: "1 / -1" }}>
@@ -978,6 +968,7 @@ function FormSections() {
     </button>
   </form>
 </Modal>
+
 
 
 
