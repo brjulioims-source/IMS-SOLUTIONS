@@ -774,6 +774,7 @@ function FormSections() {
           </form>
         </Modal>
 
+
 {/* ------------------------------------------ */}
 {/* Modal Downpayment (Paso 5 -> 6)            */}
 {/* ------------------------------------------ */}
@@ -783,7 +784,7 @@ function FormSections() {
   title="Formulario de Downpayment"
 >
   <form
-    className="form form-grid"
+    className="form downpayment-form"
     onSubmit={(e) => {
       e.preventDefault();
 
@@ -804,7 +805,6 @@ function FormSections() {
       const totalCuotas = cuotasValidas.reduce((acc, c) => acc + c.monto, 0);
       const totalDown = formData.tipoContrato.contrato.downpayment;
 
-      // Validar fechas
       if (cuotasValidas.some((c) => !c.fecha)) {
         Swal.fire({
           toast: true,
@@ -818,7 +818,6 @@ function FormSections() {
         return;
       }
 
-      // Validar total exacto
       if (totalCuotas !== totalDown) {
         Swal.fire({
           toast: true,
@@ -851,97 +850,96 @@ function FormSections() {
       });
     }}
   >
-    {/* Downpayment del contrato */}
-    <p>
-      💵 <strong>Downpayment total:</strong>{" "}
-      ${formData.tipoContrato?.contrato?.downpayment || 0}
-    </p>
+    {/* Header del formulario */}
+    <div className="form-header">
+      <p>
+        💵 <strong>Downpayment total:</strong>{" "}
+        ${formData.tipoContrato?.contrato?.downpayment || 0}
+      </p>
 
-    {/* Número de cuotas */}
-    <label>
-      ¿En cuántas cuotas desea pagar? (máx. 6)
-      <input
-        type="text"
-        value={numCuotas}
-        onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
-        onChange={(e) => {
-          const value = Math.min(parseInt(e.target.value, 10) || 0, 6);
-          setNumCuotas(value);
-          setCuotas(Array.from({ length: value }, () => ({ monto: 0, fecha: "" })));
-        }}
-        placeholder="Ej: 3"
-      />
-    </label>
+      <label className="num-cuotas">
+        ¿En cuántas cuotas desea pagar? (máx. 6)
+        <input
+          type="text"
+          value={numCuotas}
+          onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
+          onChange={(e) => {
+            const value = Math.min(parseInt(e.target.value, 10) || 0, 6);
+            setNumCuotas(value);
+            setCuotas(Array.from({ length: value }, () => ({ monto: 0, fecha: "" })));
+          }}
+          placeholder="Ej: 3"
+        />
+      </label>
+    </div>
 
-    {/* --- Sugerencias globales en tiempo real --- */}
+    {/* Cuotas ordenadas y con sugerencias dinámicas */}
     {(() => {
       const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
       const sumFilled = cuotas.reduce((a, c) => a + (c.monto || 0), 0);
       const remaining = Math.max(totalDown - sumFilled, 0);
 
-      // índices de cuotas vacías (sin monto)
-      const emptyIdx = cuotas
-        .map((q, i) => (q.monto > 0 ? null : i))
-        .filter((i) => i !== null);
+      // índices vacíos
+      const emptyIdx = cuotas.map((q, i) => (q.monto > 0 ? null : i)).filter((i) => i !== null);
 
       const base = emptyIdx.length ? Math.floor(remaining / emptyIdx.length) : 0;
       const resto = emptyIdx.length ? remaining % emptyIdx.length : 0;
 
-      // mapa de índice -> sugerencia
       const suggestionByIndex = {};
       emptyIdx.forEach((i, k) => {
         suggestionByIndex[i] = base + (k < resto ? 1 : 0);
       });
 
       return (
-        <>
-          {cuotas.map((c, idx) => (
-            <div
-              key={idx}
-              className="cuota-row"
-              style={{ display: "flex", gap: 10, alignItems: "center" }}
-            >
-              <label style={{ flex: 1 }}>
-                Cuota {idx + 1} (USD)
-                <input
-                  type="text"
-                  value={c.monto > 0 ? String(c.monto) : ""}
-                  placeholder={
-                    !c.monto && suggestionByIndex[idx] > 0
-                      ? `Sugerido: ${suggestionByIndex[idx]}`
-                      : "Ej: 1000"
-                  }
-                  style={{
-                    color: c.monto ? "#000" : "#666",
-                    fontStyle: c.monto ? "normal" : "italic",
-                  }}
-                  onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
-                  onChange={(e) => {
-                    const newCuotas = [...cuotas];
-                    newCuotas[idx].monto = parseInt(e.target.value, 10) || 0;
-                    setCuotas(newCuotas); // 🔁 recalcula sugerencias al re-render
-                  }}
-                />
-              </label>
-              <label style={{ flex: 1 }}>
-                Fecha
-                <input
-                  type="date"
-                  value={c.fecha}
-                  onChange={(e) => {
-                    const newCuotas = [...cuotas];
-                    newCuotas[idx].fecha = e.target.value;
-                    setCuotas(newCuotas);
-                  }}
-                />
-              </label>
-            </div>
-          ))}
-        </>
+        <div className="cuotas-grid">
+          {cuotas.map((c, i) => {
+            const column =
+              i < Math.ceil(cuotas.length / 2)
+                ? i * 2
+                : (i - Math.ceil(cuotas.length / 2)) * 2 + 1;
+
+            return (
+              <div key={i} className="cuota-card" style={{ order: column }}>
+                <label>
+                  Cuota {i + 1} (USD)
+                  <input
+                    type="text"
+                    value={c.monto > 0 ? String(c.monto) : ""}
+                    placeholder={
+                      !c.monto && suggestionByIndex[i] > 0
+                        ? `Sugerido: ${suggestionByIndex[i]}`
+                        : "Ej: 1000"
+                    }
+                    onInput={(e) =>
+                      (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
+                    }
+                    onChange={(e) => {
+                      const newCuotas = [...cuotas];
+                      newCuotas[i].monto = parseInt(e.target.value, 10) || 0;
+                      setCuotas(newCuotas);
+                    }}
+                  />
+                </label>
+                <label>
+                  Fecha
+                  <input
+                    type="date"
+                    value={c.fecha}
+                    onChange={(e) => {
+                      const newCuotas = [...cuotas];
+                      newCuotas[i].fecha = e.target.value;
+                      setCuotas(newCuotas);
+                    }}
+                  />
+                </label>
+              </div>
+            );
+          })}
+        </div>
       );
     })()}
 
-    {/* Vista previa del total */}
+    {/* Total final */}
     {cuotas.length > 0 && (() => {
       const totalCuotas = cuotas.reduce((acc, c) => acc + (c.monto || 0), 0);
       const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
@@ -964,9 +962,14 @@ function FormSections() {
       );
     })()}
 
-    <button type="submit" className="btn-guardar">Guardar</button>
+    <button type="submit" className="btn-guardar">
+      Guardar
+    </button>
   </form>
 </Modal>
+
+
+
 
         {/* ------------------------------------------ */}
         {/* Modal Observaciones (Paso 6 -> 7)          */}

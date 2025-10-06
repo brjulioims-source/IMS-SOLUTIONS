@@ -535,5 +535,210 @@
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
 }
 
+/* ---------------------------------------------------------- */
+/* 🔹 Fase de Pago (Downpayment) - Diseño Moderno y Uniforme */
+/* ---------------------------------------------------------- */
+
+/* Separación del label de número de cuotas */
+.num-cuotas label {
+  margin-bottom: 8px; /* espacio entre texto y input */
+}
+
+/* Mejora visual del campo de cuotas */
+.num-cuotas input {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid #c7c9d1;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.num-cuotas input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+/* Uniformidad del bloque */
+.num-cuotas {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* 🔥 controla separación entre label e input */
+  width: 100%;
+  max-width: 280px;
+}
+
+/* Header con total y número de cuotas */
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 12px;
+}
+
+.form-header p {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+  flex: 1;
+  min-width: 280px;
+  margin-bottom: 39px;
+}
+
+.form-header .num-cuotas {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.form-header .num-cuotas input {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.form-header .num-cuotas input:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+}
+
+/* Cuotas distribuidas: 2 columnas ordenadas */
+.cuotas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 22px 36px;
+  justify-items: center;
+  margin-top: 20px;
+}
+
+/* Tarjeta de cuota limpia y balanceada */
+.cuota-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px 22px;
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.cuota-card:hover {
+  border-color: #c7d2fe;
+  box-shadow: 0 3px 6px rgba(79, 70, 229, 0.08);
+}
+
+/* Labels */
+.cuota-card label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Inputs uniformes */
+.cuota-card input[type="text"],
+.cuota-card input[type="date"] {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #111827;
+  background: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.cuota-card input[type="text"]:focus,
+.cuota-card input[type="date"]:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  background: #fff;
+}
+
+/* Placeholder visible */
+.cuota-card input::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Total visualmente balanceado */
+.total-preview {
+  width: 100%;
+  max-width: 700px;
+  margin: 25px auto 15px auto;
+  padding: 16px 18px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.total-preview.success {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.total-preview.warning {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.total-preview.error {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+/* Botón alineado con el total */
+.btn-guardar {
+  width: 100%;
+  max-width: 700px;
+  margin: 10px auto 0 auto;
+  display: block;
+  text-align: center;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .form-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cuotas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .total-preview,
+  .btn-guardar {
+    max-width: 100%;
+  }
+}
+
+
 
 
