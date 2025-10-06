@@ -774,10 +774,7 @@ function FormSections() {
           </form>
         </Modal>
 
-        {/* ------------------------------------------ */}
-        {/* Modal Downpayment (Paso 5 -> 6)            */}
-        {/* ------------------------------------------ */}
-        {/* ------------------------------------------ */}
+{/* ------------------------------------------ */}
 {/* Modal Downpayment (Paso 5 -> 6)            */}
 {/* ------------------------------------------ */}
 <Modal
@@ -821,7 +818,7 @@ function FormSections() {
         return;
       }
 
-      // ✅ Validar que el total sea exacto
+      // Validar total exacto
       if (totalCuotas !== totalDown) {
         Swal.fire({
           toast: true,
@@ -835,12 +832,9 @@ function FormSections() {
         return;
       }
 
-      // Estado del pago
-      const estado = totalCuotas === totalDown ? "completo" : "pendiente";
-
       setFormData((prev) => ({
         ...prev,
-        downPayment: { cuotas: cuotasValidas, observaciones, estado },
+        downPayment: { cuotas: cuotasValidas, observaciones, estado: "completo" },
       }));
 
       setCurrentStep(6);
@@ -869,76 +863,83 @@ function FormSections() {
       <input
         type="text"
         value={numCuotas}
-        onInput={(e) => {
-          e.target.value = e.target.value.replace(/[^0-9]/g, "");
-        }}
+        onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
         onChange={(e) => {
           const value = Math.min(parseInt(e.target.value, 10) || 0, 6);
           setNumCuotas(value);
-          const newCuotas = Array.from({ length: value }, () => ({
-            monto: 0,
-            fecha: "",
-          }));
-          setCuotas(newCuotas);
+          setCuotas(Array.from({ length: value }, () => ({ monto: 0, fecha: "" })));
         }}
         placeholder="Ej: 3"
       />
     </label>
 
-    {/* Campos dinámicos de cuotas */}
-    {cuotas.map((c, idx) => (
-      <div
-        key={idx}
-        className="cuota-row"
-        style={{ display: "flex", gap: "10px", alignItems: "center" }}
-      >
-        <label style={{ flex: 1 }}>
-          Cuota {idx + 1} (USD)
-          <input
-            type="text"
-            value={String(c.monto ?? "")}
-            onInput={(e) => {
-              e.target.value = e.target.value.replace(/[^0-9]/g, "");
-            }}
-            onChange={(e) => {
-              const newCuotas = [...cuotas];
-              newCuotas[idx].monto = parseInt(e.target.value, 10) || 0;
-              setCuotas(newCuotas);
-            }}
-            placeholder="Ej: 1000"
-          />
-        </label>
-        <label style={{ flex: 1 }}>
-          Fecha
-          <input
-            type="date"
-            value={c.fecha}
-            onChange={(e) => {
-              const newCuotas = [...cuotas];
-              newCuotas[idx].fecha = e.target.value;
-              setCuotas(newCuotas);
-            }}
-          />
-        </label>
-      </div>
-    ))}
+    {/* --- Sugerencias globales en tiempo real --- */}
+    {(() => {
+      const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
+      const sumFilled = cuotas.reduce((a, c) => a + (c.monto || 0), 0);
+      const remaining = Math.max(totalDown - sumFilled, 0);
 
-    {/* Observaciones */}
-    <label style={{ gridColumn: "1 / -1" }}>
-      Observaciones
-      <textarea
-        rows="3"
-        placeholder="Notas adicionales, ejemplo: Cliente adelantó el pago"
-        value={observaciones}
-        onChange={(e) => setObservaciones(e.target.value)}
-        style={{
-          padding: "10px",
-          borderRadius: "6px",
-          border: "1px solid #ddd",
-          resize: "none",
-        }}
-      />
-    </label>
+      // índices de cuotas vacías (sin monto)
+      const emptyIdx = cuotas
+        .map((q, i) => (q.monto > 0 ? null : i))
+        .filter((i) => i !== null);
+
+      const base = emptyIdx.length ? Math.floor(remaining / emptyIdx.length) : 0;
+      const resto = emptyIdx.length ? remaining % emptyIdx.length : 0;
+
+      // mapa de índice -> sugerencia
+      const suggestionByIndex = {};
+      emptyIdx.forEach((i, k) => {
+        suggestionByIndex[i] = base + (k < resto ? 1 : 0);
+      });
+
+      return (
+        <>
+          {cuotas.map((c, idx) => (
+            <div
+              key={idx}
+              className="cuota-row"
+              style={{ display: "flex", gap: 10, alignItems: "center" }}
+            >
+              <label style={{ flex: 1 }}>
+                Cuota {idx + 1} (USD)
+                <input
+                  type="text"
+                  value={c.monto > 0 ? String(c.monto) : ""}
+                  placeholder={
+                    !c.monto && suggestionByIndex[idx] > 0
+                      ? `Sugerido: ${suggestionByIndex[idx]}`
+                      : "Ej: 1000"
+                  }
+                  style={{
+                    color: c.monto ? "#000" : "#666",
+                    fontStyle: c.monto ? "normal" : "italic",
+                  }}
+                  onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
+                  onChange={(e) => {
+                    const newCuotas = [...cuotas];
+                    newCuotas[idx].monto = parseInt(e.target.value, 10) || 0;
+                    setCuotas(newCuotas); // 🔁 recalcula sugerencias al re-render
+                  }}
+                />
+              </label>
+              <label style={{ flex: 1 }}>
+                Fecha
+                <input
+                  type="date"
+                  value={c.fecha}
+                  onChange={(e) => {
+                    const newCuotas = [...cuotas];
+                    newCuotas[idx].fecha = e.target.value;
+                    setCuotas(newCuotas);
+                  }}
+                />
+              </label>
+            </div>
+          ))}
+        </>
+      );
+    })()}
 
     {/* Vista previa del total */}
     {cuotas.length > 0 && (() => {
@@ -963,14 +964,9 @@ function FormSections() {
       );
     })()}
 
-    <button type="submit" className="btn-guardar">
-      Guardar
-    </button>
+    <button type="submit" className="btn-guardar">Guardar</button>
   </form>
 </Modal>
-
-
-
 
         {/* ------------------------------------------ */}
         {/* Modal Observaciones (Paso 6 -> 7)          */}

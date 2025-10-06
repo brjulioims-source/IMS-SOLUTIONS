@@ -528,21 +528,12 @@
   color: #991b1b;
 }
 
-/* Observaciones */
-.form textarea {
-  font-size: 14px;
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-family: inherit;
-  color: #111827;
-  resize: none;
-  transition: border 0.2s, box-shadow 0.2s;
-}
 
 .form textarea:focus {
   outline: none;
   border-color: #4f46e5;
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
 }
+
+
 
