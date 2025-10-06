@@ -1,13 +1,15 @@
-/* Contenedor de secciones */
+/* ========================================================== */
+/* 🔹 BASE GENERAL                                            */
+/* ========================================================== */
+
 .sections {
   display: grid;
-  grid-template-columns: repeat(9, 1fr); /* 9 columnas iguales */
+  grid-template-columns: repeat(9, 1fr);
   gap: 20px;
   justify-content: center;
   margin: 20px 0;
 }
 
-/* Tarjetas de cada sección */
 .section-card {
   background: #fff;
   border: 1px solid #ddd;
@@ -29,14 +31,17 @@
   transform: translateY(-3px);
 }
 
-/* Modal */
+/* ========================================================== */
+/* 🔹 MODAL BASE                                              */
+/* ========================================================== */
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,14 +50,20 @@
 
 .modal-content {
   background: #fff;
-  width: 800px;             /* ancho base más grande */
-  max-width: 95%;           /* nunca más grande que la pantalla */
+  width: 800px;
+  max-width: 95%;
   padding: 24px 28px;
   border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
   max-height: 90vh;
-  overflow-y: auto;         /* solo scroll vertical */
-  overflow-x: hidden;       /* 🔥 no permitir scroll horizontal */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.modal-content.large {
+  width: 1000px;
+  max-width: 95vw;
+  overflow-x: hidden;
 }
 
 .modal-header {
@@ -68,7 +79,10 @@
   cursor: pointer;
 }
 
-/* Formularios */
+/* ========================================================== */
+/* 🔹 FORMULARIOS BASE                                        */
+/* ========================================================== */
+
 .form {
   display: flex;
   flex-direction: column;
@@ -90,6 +104,7 @@
   background: #4f46e5;
   color: white;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
 .form button:hover {
@@ -116,46 +131,46 @@
   background: #a5b4fc;
   cursor: not-allowed;
 }
-/* Grid de oficinas */
+
+/* ========================================================== */
+/* 🔹 SELECCIÓN DE OFICINAS                                   */
+/* ========================================================== */
+
 .oficinas-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columnas fijas */
-  gap: 20px 40px; /* espacio entre tarjetas */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 40px;
   margin-top: 20px;
   justify-items: center;
 }
 
-/* Tarjeta compacta */
 .oficina-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px; /* más pequeño */
+  font-size: 13px;
   font-weight: 500;
   background: #f9fafb;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 8px 12px; /* más compacto */
-  width: 140px;  /* menos ancho */
-  height: 45px;  /* menos alto */
+  padding: 8px 12px;
+  width: 140px;
+  height: 45px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
 }
 
-/* Hover */
 .oficina-card:hover {
   background: #eef2ff;
   border-color: #6366f1;
   transform: translateY(-2px);
 }
 
-/* Ocultar radio nativo */
 .oficina-card input[type="radio"] {
   display: none;
 }
 
-/* Estado seleccionado */
 .oficina-card input[type="radio"]:checked + span {
   background: #4f46e5;
   color: #fff;
@@ -165,39 +180,184 @@
   box-shadow: 0 2px 5px rgba(79, 70, 229, 0.25);
 }
 
-/* Texto */
 .oficina-card span {
   width: 100%;
   text-align: center;
   border-radius: 6px;
 }
 
+/* ========================================================== */
+/* 🔹 DATOS PERSONALES                                        */
+/* ========================================================== */
 
-
-/* Modal grande */
-.modal-content.large {
- width: 1000px;       /* ancho mayor */
-  max-width: 95vw;     /* ocupa hasta el 95% de la pantalla */
-  overflow-x: hidden;  /* 🔥 elimina scroll horizontal */
-}
-
-/* Form en 2 columnas */
-.form-grid {
+.datos-personales-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 36px;
+  margin-top: 20px;
 }
 
-.form-grid label {
+.datos-personales-grid label {
   display: flex;
   flex-direction: column;
-  font-weight: 500;
   font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  gap: 6px;
 }
 
-/* Lista de contratos */
+.datos-personales-grid input,
+.datos-personales-grid select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+.datos-personales-grid input:focus,
+.datos-personales-grid select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .datos-personales-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========================================================== */
+/* 🔹 DERIVADOS (Esposo/a e Hijos)                            */
+/* ========================================================== */
+
+.derivados-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 36px;
+  margin-top: 15px;
+}
+
+/* Campos principales */
+.derivados-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* Inputs */
+.derivados-grid input,
+.derivados-grid select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+.derivados-grid input:focus,
+.derivados-grid select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+/* 🔹 Grid de hijos (2 columnas también) */
+.hijos-grid {
+  grid-column: span 2; /* ocupa todo el ancho del formulario */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 36px;
+  margin-top: 10px;
+}
+
+.hijos-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+.hijos-grid input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+.hijos-grid input:focus {
+  border-color: #4f46e5;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+/* Botón guardar */
+.derivados-grid .btn-guardar {
+  grid-column: span 2;
+  width: 100%;
+  max-width: 700px;
+  justify-self: center;
+  margin-top: 15px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .derivados-grid,
+  .hijos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .derivados-grid .btn-guardar {
+    max-width: 100%;
+  }
+}
+
+/* ========================================================== */
+/* 🔹 TIPO DE CONTRATO                                        */
+/* ========================================================== */
+
+.label-buscar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 20px;
+}
+
+.label-buscar input {
+  padding: 10px 12px;
+  border: 1px solid #c7c9d1;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.label-buscar input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  background: #fff;
+}
+
 .select-list {
-  margin-top: 15px; /* más espacio entre input y lista */
+  margin-top: 15px;
   max-height: 350px;
   overflow-y: auto;
   border: 1px solid var(--border-color, #ccc);
@@ -206,10 +366,9 @@
   padding: 8px;
 }
 
-/* Cada contrato */
 .select-item {
   padding: 14px 16px;
-  margin-bottom: 10px; /* separación entre contratos */
+  margin-bottom: 10px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 15px;
@@ -238,15 +397,55 @@
   text-align: center;
 }
 
-/* Contrato seleccionado */
-.contrato-seleccionado {
+/* Detalle del contrato */
+.contrato-detalle {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.contrato-detalle h4 {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 6px;
+}
+
+.contrato-detalle p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.extras {
   margin-top: 12px;
-  font-weight: 500;
-  font-size: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+
+.extra-item {
+  font-size: 14px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.extra-item span {
+  font-weight: 600;
   color: #111827;
 }
 
-/* Label de descuento */
 .label-descuento {
   margin-top: 16px;
   font-size: 14px;
@@ -256,295 +455,78 @@
   gap: 6px;
 }
 
-/* Total final */
+.descuento-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 36px;
+  margin-top: 10px;
+}
+
+.descuento-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.descuento-grid input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.descuento-grid input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .descuento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Total del contrato */
 .total-final {
   margin-top: 20px;
-  font-weight: 600;
-  font-size: 16px;
-  color: #111827;
-  background: #f9fafb;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.total-autorizado {
-  font-size: 13px;
-  color: #6b7280;
-  margin-left: 6px;
-}
-.contrato-detalle {
-  margin-top: 18px;
-  padding: 16px 20px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.contrato-detalle h4 {
-  margin: 0 0 12px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #111827;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 6px;
-}
-
-.contrato-detalle p {
-  margin: 6px 0;
-  font-size: 14px;
-  color: #374151;
-}
-
-.extras {
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* dos columnas ordenadas */
-  gap: 8px 20px;
-}
-
-.extra-item {
-  font-size: 14px;
-  color: #1f2937;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-}
-
-.extra-item span {
-  font-weight: 600;
-  color: #111827;
-}
-
-.total-final {
-  margin-top: 18px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #111827;
-  background: #f3f4f6;
-  padding: 10px 14px;
-  border-radius: 8px;
-}
-
-.total-autorizado {
-  font-size: 13px;
-  font-weight: 500;
-  color: #6b7280;
-  display: block;
-  margin-top: 4px;
-}
-.contrato-detalle {
-  margin-top: 18px;
-  padding: 16px 20px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.contrato-detalle h4 {
-  margin: 0 0 12px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #111827;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 6px;
-}
-
-.contrato-detalle p {
-  margin: 6px 0;
-  font-size: 14px;
-  color: #374151;
-}
-
-.extras {
-  margin-top: 12px;
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* dos columnas ordenadas */
-  gap: 8px 20px;
-}
-
-.extra-item {
-  font-size: 14px;
-  color: #1f2937;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-}
-
-.extra-item span {
-  font-weight: 600;
-  color: #111827;
-}
-
-.total-final {
-  margin-top: 18px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #111827;
-  background: #f3f4f6;
-  padding: 10px 14px;
-  border-radius: 8px;
-}
-
-.total-autorizado {
-  font-size: 13px;
-  font-weight: 500;
-  color: #6b7280;
-  display: block;
-  margin-top: 4px;
-}
-
-/* ------------------------------------------ */
-/* Fase de Pago - Estilos extras */
-/* ------------------------------------------ */
-
-/* Contenedor de cada fila de cuota */
-.cuota-row {
-  background: #fafafa;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 12px 14px;
-  margin-bottom: 12px;
-  transition: all 0.2s ease-in-out;
-}
-
-.cuota-row:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
-}
-
-/* Inputs de monto */
-.cuota-row input[type="text"] {
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #111827;
-  background: #ffffff;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-.cuota-row input[type="text"]:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
-}
-
-/* Inputs de fecha */
-.cuota-row input[type="date"] {
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
-  color: #111827;
-  background: #ffffff;
-  transition: border 0.2s, box-shadow 0.2s;
-}
-
-.cuota-row input[type="date"]:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
-}
-
-/* Etiquetas */
-.cuota-row label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #374151;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Vista previa del total */
-.total-preview {
-  margin-top: 16px;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  color: #1f2937;
-}
-
-/* Estado correcto */
-.total-preview.success {
-  border-color: #10b981;
-  color: #065f46;
-  background: #ecfdf5;
-}
-
-/* Estado error */
-.total-preview.error {
-  border-color: #ef4444;
-  color: #991b1b;
-  background: #fef2f2;
-}
-
-/* Caja de preview del total */
-.total-preview {
-  margin-top: 18px;
   padding: 14px 16px;
-  border-radius: 8px;
+  background: #f9fafb;
   border: 1px solid #e5e7eb;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.total-autorizado {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  display: block;
+  margin-top: 4px;
+}
+
+/* ========================================================== */
+/* 🔹 FASE DE PAGO (DOWNPAYMENT)                              */
+/* ========================================================== */
+
+.num-cuotas {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
+  max-width: 280px;
 }
 
-/* Estado: Cuadra exacto */
-.total-preview.success {
-  background: #ecfdf5;
-  border-color: #10b981;
-  color: #065f46;
-}
-
-/* Estado: Faltan */
-.total-preview.warning {
-  background: #fffbeb;
-  border-color: #f59e0b;
-  color: #92400e;
-}
-
-/* Estado: Se pasó */
-.total-preview.error {
-  background: #fef2f2;
-  border-color: #ef4444;
-  color: #991b1b;
-}
-
-
-.form textarea:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
-}
-
-/* ---------------------------------------------------------- */
-/* 🔹 Fase de Pago (Downpayment) - Diseño Moderno y Uniforme */
-/* ---------------------------------------------------------- */
-
-/* Separación del label de número de cuotas */
-.num-cuotas label {
-  margin-bottom: 8px; /* espacio entre texto y input */
-}
-
-/* Mejora visual del campo de cuotas */
 .num-cuotas input {
   margin-top: 6px;
   padding: 10px 12px;
@@ -559,16 +541,6 @@
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
 }
 
-/* Uniformidad del bloque */
-.num-cuotas {
-  display: flex;
-  flex-direction: column;
-  gap: 6px; /* 🔥 controla separación entre label e input */
-  width: 100%;
-  max-width: 280px;
-}
-
-/* Header con total y número de cuotas */
 .form-header {
   display: flex;
   justify-content: space-between;
@@ -576,7 +548,7 @@
   gap: 24px;
   flex-wrap: wrap;
   margin-bottom: 25px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid transparent;
   padding-bottom: 12px;
 }
 
@@ -586,33 +558,8 @@
   color: #111827;
   flex: 1;
   min-width: 280px;
-  margin-bottom: 39px;
 }
 
-.form-header .num-cuotas {
-  flex: 1;
-  min-width: 280px;
-  display: flex;
-  flex-direction: column;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.form-header .num-cuotas input {
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.form-header .num-cuotas input:focus {
-  outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
-}
-
-/* Cuotas distribuidas: 2 columnas ordenadas */
 .cuotas-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(280px, 1fr));
@@ -621,7 +568,6 @@
   margin-top: 20px;
 }
 
-/* Tarjeta de cuota limpia y balanceada */
 .cuota-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
@@ -641,7 +587,6 @@
   box-shadow: 0 3px 6px rgba(79, 70, 229, 0.08);
 }
 
-/* Labels */
 .cuota-card label {
   font-size: 13px;
   font-weight: 600;
@@ -651,7 +596,6 @@
   gap: 6px;
 }
 
-/* Inputs uniformes */
 .cuota-card input[type="text"],
 .cuota-card input[type="date"] {
   padding: 10px 12px;
@@ -671,13 +615,6 @@
   background: #fff;
 }
 
-/* Placeholder visible */
-.cuota-card input::placeholder {
-  color: #9ca3af;
-  font-style: italic;
-}
-
-/* Total visualmente balanceado */
 .total-preview {
   width: 100%;
   max-width: 700px;
@@ -713,7 +650,6 @@
   color: #991b1b;
 }
 
-/* Botón alineado con el total */
 .btn-guardar {
   width: 100%;
   max-width: 700px;
@@ -722,7 +658,6 @@
   text-align: center;
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .form-header {
     flex-direction: column;
@@ -738,7 +673,3 @@
     max-width: 100%;
   }
 }
-
-
-
-

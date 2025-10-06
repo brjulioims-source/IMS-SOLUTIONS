@@ -59,7 +59,7 @@ function FormSections() {
 
   // -----------------------------
   // Estados: Observaciones y otros documentos
-  const [observaciones, setObservaciones] = useState("");
+  const [observaciones] = useState("");
 
 
 
@@ -293,32 +293,36 @@ function FormSections() {
         </form>
       </Modal>
 
-        {/* ------------------------------------------ */}
-        {/* Modal Datos Personales (Paso 2 -> 3)       */}
-        {/* ------------------------------------------ */}
-        <Modal
-          isOpen={openModal === "datosPersonales"}
-          onClose={closeModal}
-          title="Formulario de Datos Personales"
-          className="large"
+      {/* ------------------------------------------ */}
+      {/* Modal Datos Personales (Paso 2 -> 3)       */}
+      {/* ------------------------------------------ */}
+      <Modal
+        isOpen={openModal === "datosPersonales"}
+        onClose={closeModal}
+        title="Formulario de Datos Personales"
+        className="large"
+      >
+        <form
+          className="form datos-form-grid"
+          onSubmit={(e) =>
+            handleSubmit(e, "datosPersonales", 2, [
+              e.target[0].value, // saludo
+              e.target[1].value, // nombre
+              e.target[2].value, // correo
+              e.target[3].value, // telefono
+              e.target[4].value, // direccion
+              e.target[5].value, // pais
+              e.target[7].value, // idioma
+            ])
+          }
         >
-          <form
-            className="form form-grid"
-            onSubmit={(e) =>
-              handleSubmit(e, "datosPersonales", 2, [
-                e.target[0].value, // saludo
-                e.target[1].value, // nombre
-                e.target[2].value, // correo
-                e.target[3].value, // telefono
-                e.target[4].value, // direccion
-                e.target[5].value, // pais
-                e.target[7].value, // idioma
-              ])
-            }
-          >
+          <div className="datos-personales-grid">
             <label>
               Seleccione según aplique *
-              <select name="saludo" defaultValue={formData.datosPersonales?.saludo || ""}>
+              <select
+                name="saludo"
+                defaultValue={formData.datosPersonales?.saludo || ""}
+              >
                 <option value="">Seleccione</option>
                 <option value="Mr.">Mr.</option>
                 <option value="Ms.">Ms.</option>
@@ -397,7 +401,10 @@ function FormSections() {
 
             <label>
               Idioma nativo *
-              <select name="idioma" defaultValue={formData.datosPersonales?.idioma || ""}>
+              <select
+                name="idioma"
+                defaultValue={formData.datosPersonales?.idioma || ""}
+              >
                 <option value="">Seleccione</option>
                 <option>Español</option>
                 <option>Portugués</option>
@@ -420,189 +427,198 @@ function FormSections() {
                 <option>Inglés</option>
               </select>
             </label>
+          </div>
 
-            <button type="submit" className="btn-guardar">Guardar</button>
-          </form>
-        </Modal>
+          <button type="submit" className="btn-guardar">Guardar</button>
+        </form>
+</Modal>
 
-        {/* ------------------------------------------ */}
-        {/* Modal Derivados (Paso 3 -> 4)              */}
-        {/* ------------------------------------------ */}
-        <Modal
-          isOpen={openModal === "derivados"}
-          onClose={closeModal}
-          title="Formulario de Derivados (Esposo/a e Hijos)"
-        >
-          <form
-            className="form form-grid"
-            onSubmit={(e) => {
-              e.preventDefault();
 
-              // Validaciones
-              if (!hasSpouse) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Debe seleccionar si tiene esposo(a) o no",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-              if (hasSpouse === "si" && !spouseName.trim()) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Debe ingresar el nombre del esposo/a",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-              if (!hasChildren) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Debe seleccionar si tiene hijos o no",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-              if (hasChildren === "si") {
-                if (!numChildren || numChildren <= 0) {
-                  Swal.fire({
-                    toast: true,
-                    position: "bottom-end",
-                    icon: "error",
-                    title: "⚠️ Debe ingresar la cantidad de hijos",
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                  });
-                  return;
-                }
-                if (childrenNames.some((child) => !child.trim())) {
-                  Swal.fire({
-                    toast: true,
-                    position: "bottom-end",
-                    icon: "error",
-                    title: "⚠️ Debe ingresar todos los nombres de los hijos",
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                  });
-                  return;
-                }
-              }
+{/* ------------------------------------------ */}
+{/* Modal Derivados (Paso 3 -> 4)              */}
+{/* ------------------------------------------ */}
+<Modal
+  isOpen={openModal === "derivados"}
+  onClose={closeModal}
+  title="Formulario de Derivados (Esposo/a e Hijos)"
+>
+  <form
+    className="form derivados-grid"
+    onSubmit={(e) => {
+      e.preventDefault();
 
-              // ✅ Guardar derivados con numChildren convertido a número
-              const data = {
-                hasSpouse,
-                spouseName,
-                hasChildren,
-                numChildren: Number(numChildren) || 0,
-                childrenNames,
-              };
-              setFormData((prev) => ({ ...prev, derivados: data }));
-              setCurrentStep(4);
-              closeModal();
+      // ✅ Validaciones con SweetAlert (no tocar)
+      if (!hasSpouse) {
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "error",
+          title: "⚠️ Debe seleccionar si tiene esposo(a) o no",
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true,
+        });
+        return;
+      }
+      if (hasSpouse === "si" && !spouseName.trim()) {
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "error",
+          title: "⚠️ Debe ingresar el nombre del esposo/a",
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true,
+        });
+        return;
+      }
+      if (!hasChildren) {
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "error",
+          title: "⚠️ Debe seleccionar si tiene hijos o no",
+          showConfirmButton: false,
+          timer: 2500,
+          timerProgressBar: true,
+        });
+        return;
+      }
+      if (hasChildren === "si") {
+        if (!numChildren || numChildren <= 0) {
+          Swal.fire({
+            toast: true,
+            position: "bottom-end",
+            icon: "error",
+            title: "⚠️ Debe ingresar la cantidad de hijos",
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+          });
+          return;
+        }
+        if (childrenNames.some((child) => !child.trim())) {
+          Swal.fire({
+            toast: true,
+            position: "bottom-end",
+            icon: "error",
+            title: "⚠️ Debe ingresar todos los nombres de los hijos",
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+          });
+          return;
+        }
+      }
 
-              Swal.fire({
-                toast: true,
-                position: "bottom-end",
-                icon: "success",
-                title: "✅ Derivados guardados con éxito",
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-              });
+      const data = {
+        hasSpouse,
+        spouseName,
+        hasChildren,
+        numChildren: Number(numChildren) || 0,
+        childrenNames,
+      };
+      setFormData((prev) => ({ ...prev, derivados: data }));
+      setCurrentStep(4);
+      closeModal();
+
+      Swal.fire({
+        toast: true,
+        position: "bottom-end",
+        icon: "success",
+        title: "✅ Derivados guardados con éxito",
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+      });
+    }}
+  >
+    {/* Campo esposo */}
+    <label>
+      ¿Tienes esposo(a)? *
+      <select value={hasSpouse} onChange={(e) => setHasSpouse(e.target.value)}>
+        <option value="" disabled>Seleccione</option>
+        <option value="si">Sí</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+
+    {hasSpouse === "si" && (
+      <label>
+        Nombre del esposo(a) *
+        <input
+          type="text"
+          value={spouseName}
+          onChange={(e) => setSpouseName(e.target.value)}
+          placeholder="Ejemplo: Ana Pérez"
+        />
+      </label>
+    )}
+
+    {/* Campo hijos */}
+    <label>
+      ¿Tienes hijos? *
+      <select
+        value={hasChildren}
+        onChange={(e) => {
+          setHasChildren(e.target.value);
+          setChildrenNames([]);
+          setNumChildren(e.target.value === "si" ? 1 : 0);
+        }}
+      >
+        <option value="" disabled>Seleccione</option>
+        <option value="si">Sí</option>
+        <option value="no">No</option>
+      </select>
+    </label>
+
+    {hasChildren === "si" && (
+      <>
+        <label>
+          ¿Cuántos hijos tienes? (máx. 12) *
+          <input
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={numChildren}
+            onInput={(e) => {
+              e.target.value = e.target.value.replace(/[^0-9]/g, "");
             }}
-          >
-            <label>
-              ¿Tienes esposo(a)? *
-              <select value={hasSpouse} onChange={(e) => setHasSpouse(e.target.value)}>
-                <option value="" disabled>Seleccione</option>
-                <option value="si">Sí</option>
-                <option value="no">No</option>
-              </select>
-            </label>
+            onChange={(e) => {
+              const value = Math.min(parseInt(e.target.value, 10) || 0, 12);
+              setNumChildren(value);
+              setChildrenNames(Array(value).fill(""));
+            }}
+            placeholder="Ej: 2"
+          />
+        </label>
 
-            {hasSpouse === "si" && (
-              <label>
-                Nombre del esposo(a) *
-                <input
-                  type="text"
-                  value={spouseName}
-                  onChange={(e) => setSpouseName(e.target.value)}
-                  placeholder="Ejemplo: Ana Pérez"
-                />
-              </label>
-            )}
-
-            <label>
-              ¿Tienes hijos? *
-              <select
-                value={hasChildren}
+        {/* ✅ Nombres de hijos en dos columnas */}
+        <div className="hijos-grid">
+          {Array.from({ length: numChildren }, (_, i) => (
+            <label key={i}>
+              Nombre del hijo {i + 1} *
+              <input
+                type="text"
+                value={childrenNames[i] || ""}
                 onChange={(e) => {
-                  setHasChildren(e.target.value);
-                  setChildrenNames([]);
-                  setNumChildren(e.target.value === "si" ? 1 : 0); // ✅ inicia en 1 si dice Sí
+                  const updated = [...childrenNames];
+                  updated[i] = e.target.value;
+                  setChildrenNames(updated);
                 }}
-              >
-                <option value="" disabled>Seleccione</option>
-                <option value="si">Sí</option>
-                <option value="no">No</option>
-              </select>
+                placeholder={`Ejemplo: Hijo ${i + 1}`}
+              />
             </label>
+          ))}
+        </div>
+      </>
+    )}
 
-            {hasChildren === "si" && (
-              <>
-                <label>
-                  ¿Cuántos hijos tienes? (máx. 12) *
-                  <input
-                    type="text"
-                    inputMode="numeric" 
-                    pattern="[0-9]*" 
-                    value={numChildren}
-                    onInput={(e) => {
-                      e.target.value = e.target.value.replace(/[^0-9]/g, ""); // ✅ fuerza solo dígitos
-                    }}
-                    onChange={(e) => {
-                      const value = Math.min(parseInt(e.target.value, 10) || 0, 12);
-                      setNumChildren(value);
-                      setChildrenNames(Array(value).fill(""));
-                    }}
-                    placeholder="Ej: 2"
-                  />
-                </label>
-                {Array.from({ length: numChildren }, (_, i) => (
-                  <label key={i}>
-                    Nombre del hijo {i + 1} *
-                    <input
-                      type="text"
-                      value={childrenNames[i] || ""}
-                      onChange={(e) => {
-                        const updated = [...childrenNames];
-                        updated[i] = e.target.value;
-                        setChildrenNames(updated);
-                      }}
-                      placeholder={`Ejemplo: Hijo ${i + 1}`}
-                    />
-                  </label>
-                ))}
-              </>
-            )}
+    <button type="submit" className="btn-guardar">Guardar</button>
+  </form>
+</Modal>
 
-            <button type="submit" className="btn-guardar">Guardar</button>
-          </form>
-        </Modal>
+
 
 
         {/* ------------------------------------------ */}
@@ -614,9 +630,10 @@ function FormSections() {
           title="Formulario de Tipo de Contrato"
         >
           <form
-            className="form"
+            className="form contrato-form"
             onSubmit={(e) => {
               e.preventDefault();
+
               if (!selectedContrato) {
                 Swal.fire({
                   toast: true,
@@ -655,9 +672,10 @@ function FormSections() {
               });
             }}
           >
+
             {/* Buscar contrato */}
-            <label style={{ marginBottom: "15px" }}>
-              Por favor seleccione el contrato a generar *
+            <label className="label-buscar">
+              <span>Por favor seleccione el contrato a generar *</span>
               <input
                 type="text"
                 placeholder="Buscar contrato..."
@@ -678,7 +696,7 @@ function FormSections() {
                     }`}
                     onClick={() => setSelectedContrato(c)}
                   >
-                    {c.nombre} — ${c.precio}
+                    <strong>{c.nombre}</strong> — ${c.precio}
                   </div>
                 ))
               ) : (
@@ -686,7 +704,7 @@ function FormSections() {
               )}
             </div>
 
-            {/* Mostrar info contrato seleccionado */}
+            {/* Contrato seleccionado */}
             {selectedContrato && (
               <>
                 <div className="contrato-detalle">
@@ -696,30 +714,29 @@ function FormSections() {
                   </p>
 
                   <div className="extras">
-                   {/* ✅ Cónyuge (solo aparece si en derivados elegiste "Sí") */}
-                  {selectedContrato.conyuge &&
-                    formData.derivados?.hasSpouse === "si" && (
-                      <p className="extra-item">
-                        👩‍❤️‍👨 <strong>Cónyuge:</strong> ${selectedContrato.conyuge}
-                      </p>
-                    )}
-                                      {/* ✅ Hijos (solo aparecen si en derivados elegiste "Sí") */}
-                  {selectedContrato.hijos &&
-                    formData.derivados?.hasChildren === "si" && (
-                      <p className="extra-item">
-                        👶 <strong>Hijos:</strong> $
-                        {(formData.derivados?.numChildren || 0) * selectedContrato.hijos}
-                      </p>
-                    )}
+                    {selectedContrato.conyuge &&
+                      formData.derivados?.hasSpouse === "si" && (
+                        <p className="extra-item">
+                          👩‍❤️‍👨 <span>Cónyuge:</span> ${selectedContrato.conyuge}
+                        </p>
+                      )}
+                    {selectedContrato.hijos &&
+                      formData.derivados?.hasChildren === "si" && (
+                        <p className="extra-item">
+                          👶 <span>Hijos:</span> $
+                          {(formData.derivados?.numChildren || 0) *
+                            selectedContrato.hijos}
+                        </p>
+                      )}
                     {selectedContrato.downpayment && (
                       <p className="extra-item">
-                        💵 <strong>Downpayment:</strong> ${selectedContrato.downpayment}
+                        💵 <span>Downpayment:</span> ${selectedContrato.downpayment}
                       </p>
                     )}
                   </div>
                 </div>
 
-                {/* Preguntar descuento */}
+                {/* Descuento */}
                 <label className="label-descuento">
                   ¿Tiene descuento?
                   <select
@@ -732,7 +749,7 @@ function FormSections() {
                 </label>
 
                 {tieneDescuento === "si" && (
-                  <>
+                  <div className="descuento-grid">
                     <label>
                       Autorizado por:
                       <input
@@ -752,15 +769,14 @@ function FormSections() {
                         onChange={(e) => setMontoDescuento(Number(e.target.value))}
                       />
                     </label>
-                  </>
+                  </div>
                 )}
 
                 {/* Total final */}
                 <p className="total-final">
-                  💰 <strong>Total a pagar: ${calcularTotal()}</strong>
+                  💰 <strong>Total a pagar:</strong> ${calcularTotal()}
                   {tieneDescuento === "si" && autorizadoPor && (
                     <span className="total-autorizado">
-                      {" "}
                       (Autorizado por: {autorizadoPor})
                     </span>
                   )}
@@ -775,201 +791,198 @@ function FormSections() {
         </Modal>
 
 
-{/* ------------------------------------------ */}
-{/* Modal Downpayment (Paso 5 -> 6)            */}
-{/* ------------------------------------------ */}
-<Modal
-  isOpen={openModal === "downPayment"}
-  onClose={closeModal}
-  title="Formulario de Downpayment"
->
-  <form
-    className="form downpayment-form"
-    onSubmit={(e) => {
-      e.preventDefault();
+        {/* ------------------------------------------ */}
+        {/* Modal Downpayment (Paso 5 -> 6)            */}
+        {/* ------------------------------------------ */}
+        <Modal
+          isOpen={openModal === "downPayment"}
+          onClose={closeModal}
+          title="Formulario de Downpayment"
+        >
+          <form
+            className="form downpayment-form"
+            onSubmit={(e) => {
+              e.preventDefault();
 
-      if (!formData.tipoContrato?.contrato?.downpayment) {
-        Swal.fire({
-          toast: true,
-          position: "bottom-end",
-          icon: "error",
-          title: "⚠️ Debe seleccionar un contrato con Downpayment",
-          showConfirmButton: false,
-          timer: 2500,
-          timerProgressBar: true,
-        });
-        return;
-      }
+              if (!formData.tipoContrato?.contrato?.downpayment) {
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: "⚠️ Debe seleccionar un contrato con Downpayment",
+                  showConfirmButton: false,
+                  timer: 2500,
+                  timerProgressBar: true,
+                });
+                return;
+              }
 
-      const cuotasValidas = cuotas.filter((c) => c.monto > 0);
-      const totalCuotas = cuotasValidas.reduce((acc, c) => acc + c.monto, 0);
-      const totalDown = formData.tipoContrato.contrato.downpayment;
+              const cuotasValidas = cuotas.filter((c) => c.monto > 0);
+              const totalCuotas = cuotasValidas.reduce((acc, c) => acc + c.monto, 0);
+              const totalDown = formData.tipoContrato.contrato.downpayment;
 
-      if (cuotasValidas.some((c) => !c.fecha)) {
-        Swal.fire({
-          toast: true,
-          position: "bottom-end",
-          icon: "error",
-          title: "⚠️ Ingrese la fecha para cada cuota con monto",
-          showConfirmButton: false,
-          timer: 2500,
-          timerProgressBar: true,
-        });
-        return;
-      }
+              if (cuotasValidas.some((c) => !c.fecha)) {
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: "⚠️ Ingrese la fecha para cada cuota con monto",
+                  showConfirmButton: false,
+                  timer: 2500,
+                  timerProgressBar: true,
+                });
+                return;
+              }
 
-      if (totalCuotas !== totalDown) {
-        Swal.fire({
-          toast: true,
-          position: "bottom-end",
-          icon: "error",
-          title: `⚠️ El total ingresado ($${totalCuotas}) debe coincidir con el Downpayment ($${totalDown})`,
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-        });
-        return;
-      }
+              if (totalCuotas !== totalDown) {
+                Swal.fire({
+                  toast: true,
+                  position: "bottom-end",
+                  icon: "error",
+                  title: `⚠️ El total ingresado ($${totalCuotas}) debe coincidir con el Downpayment ($${totalDown})`,
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+                });
+                return;
+              }
 
-      setFormData((prev) => ({
-        ...prev,
-        downPayment: { cuotas: cuotasValidas, observaciones, estado: "completo" },
-      }));
+              setFormData((prev) => ({
+                ...prev,
+                downPayment: { cuotas: cuotasValidas, observaciones, estado: "completo" },
+              }));
 
-      setCurrentStep(6);
-      closeModal();
+              setCurrentStep(6);
+              closeModal();
 
-      Swal.fire({
-        toast: true,
-        position: "bottom-end",
-        icon: "success",
-        title: "✅ Fase de Pago guardada con éxito",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-      });
-    }}
-  >
-    {/* Header del formulario */}
-    <div className="form-header">
-      <p>
-        💵 <strong>Downpayment total:</strong>{" "}
-        ${formData.tipoContrato?.contrato?.downpayment || 0}
-      </p>
+              Swal.fire({
+                toast: true,
+                position: "bottom-end",
+                icon: "success",
+                title: "✅ Downpayment guardada con éxito",
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+              });
+            }}
+          >
+            {/* Header del formulario */}
+            <div className="form-header">
+              <p>
+                💵 <strong>Downpayment total:</strong>{" "}
+                ${formData.tipoContrato?.contrato?.downpayment || 0}
+              </p>
 
-      <label className="num-cuotas">
-        ¿En cuántas cuotas desea pagar? (máx. 6)
-        <input
-          type="text"
-          value={numCuotas}
-          onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
-          onChange={(e) => {
-            const value = Math.min(parseInt(e.target.value, 10) || 0, 6);
-            setNumCuotas(value);
-            setCuotas(Array.from({ length: value }, () => ({ monto: 0, fecha: "" })));
-          }}
-          placeholder="Ej: 3"
-        />
-      </label>
-    </div>
+              <label className="num-cuotas">
+                ¿En cuántas cuotas desea pagar? (máx. 6)
+                <input
+                  type="text"
+                  value={numCuotas}
+                  onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
+                  onChange={(e) => {
+                    const value = Math.min(parseInt(e.target.value, 10) || 0, 6);
+                    setNumCuotas(value);
+                    setCuotas(Array.from({ length: value }, () => ({ monto: 0, fecha: "" })));
+                  }}
+                  placeholder="Ej: 3"
+                />
+              </label>
+            </div>
 
-    {/* Cuotas ordenadas y con sugerencias dinámicas */}
-    {(() => {
-      const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
-      const sumFilled = cuotas.reduce((a, c) => a + (c.monto || 0), 0);
-      const remaining = Math.max(totalDown - sumFilled, 0);
+            {/* Cuotas ordenadas y con sugerencias dinámicas */}
+            {(() => {
+              const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
+              const sumFilled = cuotas.reduce((a, c) => a + (c.monto || 0), 0);
+              const remaining = Math.max(totalDown - sumFilled, 0);
 
-      // índices vacíos
-      const emptyIdx = cuotas.map((q, i) => (q.monto > 0 ? null : i)).filter((i) => i !== null);
+              // índices vacíos
+              const emptyIdx = cuotas.map((q, i) => (q.monto > 0 ? null : i)).filter((i) => i !== null);
 
-      const base = emptyIdx.length ? Math.floor(remaining / emptyIdx.length) : 0;
-      const resto = emptyIdx.length ? remaining % emptyIdx.length : 0;
+              const base = emptyIdx.length ? Math.floor(remaining / emptyIdx.length) : 0;
+              const resto = emptyIdx.length ? remaining % emptyIdx.length : 0;
 
-      const suggestionByIndex = {};
-      emptyIdx.forEach((i, k) => {
-        suggestionByIndex[i] = base + (k < resto ? 1 : 0);
-      });
+              const suggestionByIndex = {};
+              emptyIdx.forEach((i, k) => {
+                suggestionByIndex[i] = base + (k < resto ? 1 : 0);
+              });
 
-      return (
-        <div className="cuotas-grid">
-          {cuotas.map((c, i) => {
-            const column =
-              i < Math.ceil(cuotas.length / 2)
-                ? i * 2
-                : (i - Math.ceil(cuotas.length / 2)) * 2 + 1;
+              return (
+                <div className="cuotas-grid">
+                  {cuotas.map((c, i) => {
+                    const column =
+                      i < Math.ceil(cuotas.length / 2)
+                        ? i * 2
+                        : (i - Math.ceil(cuotas.length / 2)) * 2 + 1;
 
-            return (
-              <div key={i} className="cuota-card" style={{ order: column }}>
-                <label>
-                  Cuota {i + 1} (USD)
-                  <input
-                    type="text"
-                    value={c.monto > 0 ? String(c.monto) : ""}
-                    placeholder={
-                      !c.monto && suggestionByIndex[i] > 0
-                        ? `Sugerido: ${suggestionByIndex[i]}`
-                        : "Ej: 1000"
-                    }
-                    onInput={(e) =>
-                      (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
-                    }
-                    onChange={(e) => {
-                      const newCuotas = [...cuotas];
-                      newCuotas[i].monto = parseInt(e.target.value, 10) || 0;
-                      setCuotas(newCuotas);
-                    }}
-                  />
-                </label>
-                <label>
-                  Fecha
-                  <input
-                    type="date"
-                    value={c.fecha}
-                    onChange={(e) => {
-                      const newCuotas = [...cuotas];
-                      newCuotas[i].fecha = e.target.value;
-                      setCuotas(newCuotas);
-                    }}
-                  />
-                </label>
-              </div>
-            );
-          })}
-        </div>
-      );
-    })()}
+                    return (
+                      <div key={i} className="cuota-card" style={{ order: column }}>
+                        <label>
+                          Cuota {i + 1} (USD)
+                          <input
+                            type="text"
+                            value={c.monto > 0 ? String(c.monto) : ""}
+                            placeholder={
+                              !c.monto && suggestionByIndex[i] > 0
+                                ? `Sugerido: ${suggestionByIndex[i]}`
+                                : "Ej: 1000"
+                            }
+                            onInput={(e) =>
+                              (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
+                            }
+                            onChange={(e) => {
+                              const newCuotas = [...cuotas];
+                              newCuotas[i].monto = parseInt(e.target.value, 10) || 0;
+                              setCuotas(newCuotas);
+                            }}
+                          />
+                        </label>
+                        <label>
+                          Fecha
+                          <input
+                            type="date"
+                            value={c.fecha}
+                            onChange={(e) => {
+                              const newCuotas = [...cuotas];
+                              newCuotas[i].fecha = e.target.value;
+                              setCuotas(newCuotas);
+                            }}
+                          />
+                        </label>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
 
-    {/* Total final */}
-    {cuotas.length > 0 && (() => {
-      const totalCuotas = cuotas.reduce((acc, c) => acc + (c.monto || 0), 0);
-      const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
-      const diferencia = totalDown - totalCuotas;
+            {/* Total final */}
+            {cuotas.length > 0 && (() => {
+              const totalCuotas = cuotas.reduce((acc, c) => acc + (c.monto || 0), 0);
+              const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
+              const diferencia = totalDown - totalCuotas;
 
-      let previewClass = "total-preview";
-      if (diferencia === 0) previewClass += " success";
-      else if (diferencia > 0) previewClass += " warning";
-      else previewClass += " error";
+              let previewClass = "total-preview";
+              if (diferencia === 0) previewClass += " success";
+              else if (diferencia > 0) previewClass += " warning";
+              else previewClass += " error";
 
-      return (
-        <div className={previewClass}>
-          <p>
-            💰 <strong>Total ingresado:</strong> ${totalCuotas} / ${totalDown}
-          </p>
-          {diferencia > 0 && <span>⚠️ Faltan ${diferencia}</span>}
-          {diferencia < 0 && <span>⚠️ Se pasó por ${Math.abs(diferencia)}</span>}
-          {diferencia === 0 && <span>✅ Cuadra exacto</span>}
-        </div>
-      );
-    })()}
+              return (
+                <div className={previewClass}>
+                  <p>
+                    💰 <strong>Total ingresado:</strong> ${totalCuotas} / ${totalDown}
+                  </p>
+                  {diferencia > 0 && <span>⚠️ Faltan ${diferencia}</span>}
+                  {diferencia < 0 && <span>⚠️ Se pasó por ${Math.abs(diferencia)}</span>}
+                  {diferencia === 0 && <span>✅ Cuadra exacto</span>}
+                </div>
+              );
+            })()}
 
-    <button type="submit" className="btn-guardar">
-      Guardar
-    </button>
-  </form>
-</Modal>
-
-
-
+            <button type="submit" className="btn-guardar">
+              Guardar
+            </button>
+          </form>
+        </Modal>
 
         {/* ------------------------------------------ */}
         {/* Modal Observaciones (Paso 6 -> 7)          */}
