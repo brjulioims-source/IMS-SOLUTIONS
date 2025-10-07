@@ -1,9 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import Modal from "../components/modal/Modal";
 import DashboardLayout from "../layouts/DashboardLayout";
 import StepProgress from "../components/StepProgress";
 import Swal from "sweetalert2";
 import "./FormSections.css";
+import OficinasForm from "../components/forms/OficinasForm.jsx";
+import DatosPersonalesForm from "../components/forms/DatosPersonalesForm.jsx";
+import DerivadosForm from "../components/forms/DerivadosForm.jsx";
+import TipoContratoForm from "../components/forms/TipoContratoForm.jsx";
+import DownPaymentForm from "../components/forms/DownPaymentForm.jsx";
+import PagodeSaldoForm from "../components/forms/PagodeSaldo.jsx";  
+
 
 function FormSections() {
   const totalSteps = 7;
@@ -19,49 +26,8 @@ function FormSections() {
     derivados: {},
     tipoContrato: {},
     downPayment: {},
-    observaciones: {},
+    pagodeSaldo: {},
   });
-
-  // -----------------------------
-  // Estados: Derivados
-  // -----------------------------
-  const [hasSpouse, setHasSpouse] = useState("");
-  const [spouseName, setSpouseName] = useState("");
-  const [hasChildren, setHasChildren] = useState("");
-  const [childrenNames, setChildrenNames] = useState([]);
-  const [numChildren, setNumChildren] = useState("");
-
-  // -----------------------------
-  // Estados: Tipo de Contrato
-  // -----------------------------
-  const [searchContrato, setSearchContrato] = useState("");
-  const [selectedContrato, setSelectedContrato] = useState(
-    formData.tipoContrato?.contrato || null
-  );
-  const [tieneDescuento, setTieneDescuento] = useState("no");
-  const [autorizadoPor, setAutorizadoPor] = useState("");
-  const [montoDescuento, setMontoDescuento] = useState(0);
-
-  // 👇 este useEffect va aquí mismo
-  useEffect(() => {
-    if (openModal === "tipoContrato" && formData.tipoContrato) {
-      setSelectedContrato(formData.tipoContrato.contrato || null);
-      setTieneDescuento(formData.tipoContrato.tieneDescuento || "no");
-      setAutorizadoPor(formData.tipoContrato.autorizadoPor || "");
-      setMontoDescuento(formData.tipoContrato.montoDescuento || 0);
-    }
-  }, [openModal, formData]);
-
-  // -----------------------------
-  // Estados: Fase de Pago (Down Payment)
-  const [numCuotas, setNumCuotas] = useState(0);   // cuántas cuotas eligió el usuario
-  const [cuotas, setCuotas] = useState([]);        // array con los datos de cada cuota
-
-  // -----------------------------
-  // Estados: Observaciones y otros documentos
-  const [observaciones] = useState("");
-
-
 
   // -----------------------------
   // Lista de contratos (filtro y selección)
@@ -138,12 +104,6 @@ function FormSections() {
     { nombre: "ICE ACCOMPANIMENT BY LAWYER", precio: 2500, conyuge: null, hijos: null, downpayment: null },
   ];
 
-  const contratosFiltrados = contratos
-    .filter((c) =>
-      c.nombre.toLowerCase().includes(searchContrato.toLowerCase())
-    )
-    .sort((a, b) => a.nombre.localeCompare(b.nombre));
-
   // -----------------------------
   // Helpers
   // -----------------------------
@@ -153,43 +113,14 @@ function FormSections() {
   const openOficinas = () => setOpenModal("oficinas");
   const openDatosPersonales = () => setOpenModal("datosPersonales");
   const openDerivados = () => setOpenModal("derivados");
+  const openTipoContrato = () => setOpenModal("tipoContrato");
   const openDownPayment = () => setOpenModal("downPayment");
-  const openObservaciones = () => setOpenModal("observaciones");
+  const openPagodeSaldo = () => setOpenModal("pagodeSaldo");
+  const openCartaMatrimonio = () => setOpenModal("cartaMatrimonio");
+  const openCartaAudiencia = () => setOpenModal("cartaAudiencia");
+  const openPagoTarjeta = () => setOpenModal("pagoTarjeta");
 
-  // 👉 Función para calcular el total
-  const calcularTotal = () => {
-    if (!selectedContrato) return 0;
-
-    let total = selectedContrato.precio;
-
-    // cónyuge
-    if (formData.derivados?.hasSpouse === "si" && selectedContrato.conyuge) {
-      total += selectedContrato.conyuge;
-    }
-
-    // hijos
-    if (formData.derivados?.hasChildren === "si" && selectedContrato.hijos) {
-      const cantidadHijos = Number(formData.derivados.numChildren) || 0;
-      total += cantidadHijos * selectedContrato.hijos;
-    }
-    // descuento
-    if (tieneDescuento === "si" && montoDescuento > 0) {
-      total -= montoDescuento;
-    }
-    return total;
-  };
-
-  const openTipoContrato = () => {
-    // Inicializa la selección con lo ya guardado (si existe)
-    if (formData.tipoContrato?.nombre) {
-      setSelectedContrato(formData.tipoContrato);
-    } else {
-      setSelectedContrato(null);
-    }
-    setSearchContrato("");
-    setOpenModal("tipoContrato");
-  };
-
+ 
   // Validación genérica
   const handleSubmit = (e, stepKey, stepNumber, fields) => {
     e.preventDefault();
@@ -237,789 +168,88 @@ function FormSections() {
           <div className="section-card" onClick={openDerivados}>👨‍👩‍👧 Derivados</div>
           <div className="section-card" onClick={openTipoContrato}>📑 Tipo de Contrato</div>
           <div className="section-card" onClick={openDownPayment}>💵 Down Payment</div>
-          <div className="section-card" onClick={openObservaciones}>💰 Pago de saldo</div>
-          <div className="section-card" onClick={openObservaciones}>📜 Carta res. de matrimonio</div>
-          <div className="section-card" onClick={openObservaciones}>⚖️ Carta res. próxima audiencia</div>
-          <div className="section-card" onClick={openObservaciones}>💳 Pago con tarjeta digital</div>
+          <div className="section-card" onClick={openPagodeSaldo}>💰 Pago de saldo</div>
+          <div className="section-card" onClick={openCartaMatrimonio}>📜 Carta res. de matrimonio</div>
+          <div className="section-card" onClick={openCartaAudiencia}>⚖️ Carta res. próxima audiencia</div>
+          <div className="section-card" onClick={openPagoTarjeta}>💳 Pago con tarjeta digital</div>
         </div>
 
         {/* -------------------------------- */}
         {/* Modal Oficinas (Paso 1 -> 2)     */}
         {/* -------------------------------- */}
-        <Modal
-          isOpen={openModal === "oficinas"}
-          onClose={closeModal}
-          title="Formulario de Oficinas"
-        >
-          <form
-            className="form"
-            onSubmit={(e) =>
-              handleSubmit(e, "oficinas", 1, [
-                e.target.querySelector("input[type='radio']:checked")?.value || "",
-              ])
-            }
-          >
-            <p>Por favor seleccione la oficina a la cual vincular este contrato:</p>
-
-            <div className="oficinas-grid">
-              {[
-                "Houston",
-                "Gainesville",
-                "Kissimmee 1",
-                "Norcross",
-                "Tampa",
-                "Renton",
-                "Austin",
-                "San Antonio",
-                "San Juan",
-                "Mayagüez",
-                "New Jersey",
-                "Chula Vista",
-                "Hackensack",
-              ].map((oficina) => (
-                <label key={oficina} className="oficina-card">
-                  <input
-                    type="radio"
-                    name="oficina"
-                    value={oficina}
-                    defaultChecked={formData.oficinas?.oficina === oficina}
-                  />
-                  <span>🏢 {oficina}</span>
-                </label>
-              ))}
-            </div>
-
-            <button type="submit" className="btn-guardar">Guardar</button>
-          </form>
+        
+        <Modal isOpen={openModal === "oficinas"} onClose={closeModal} title="Formulario de Oficinas">
+          <OficinasForm formData={formData} handleSubmit={handleSubmit} />
         </Modal>
 
         {/* ------------------------------------------ */}
         {/* Modal Datos Personales (Paso 2 -> 3)       */}
         {/* ------------------------------------------ */}
-        <Modal
-          isOpen={openModal === "datosPersonales"}
-          onClose={closeModal}
-          title="Formulario de Datos Personales"
-          className="large"
-        >
-          <form
-            className="form datos-form-grid"
-            onSubmit={(e) =>
-              handleSubmit(e, "datosPersonales", 2, [
-                e.target[0].value, // saludo
-                e.target[1].value, // nombre
-                e.target[2].value, // correo
-                e.target[3].value, // telefono
-                e.target[4].value, // direccion
-                e.target[5].value, // pais
-                e.target[7].value, // idioma
-              ])
-            }
-          >
-            <div className="datos-personales-grid">
-              <label>
-                Seleccione según aplique *
-                <select
-                  name="saludo"
-                  defaultValue={formData.datosPersonales?.saludo || ""}
-                >
-                  <option value="">Seleccione</option>
-                  <option value="Mr.">Mr.</option>
-                  <option value="Ms.">Ms.</option>
-                </select>
-              </label>
-
-              <label>
-                Nombre del contratante *
-                <input
-                  type="text"
-                  name="nombre"
-                  defaultValue={formData.datosPersonales?.nombre || ""}
-                  placeholder="Ejemplo: Juan Hernández"
-                />
-              </label>
-
-              <label>
-                Correo electrónico *
-                <input
-                  type="email"
-                  name="correo"
-                  defaultValue={formData.datosPersonales?.correo || ""}
-                  placeholder="Ejemplo: juanhernandez@gmail.com"
-                />
-              </label>
-
-              <label>
-                Teléfono *
-                <input
-                  type="tel"
-                  name="telefono"
-                  defaultValue={formData.datosPersonales?.telefono || ""}
-                  placeholder="Ejemplo: 1234567890"
-                  pattern="[0-9]+"
-                />
-              </label>
-
-              <label>
-                Dirección *
-                <input
-                  type="text"
-                  name="direccion"
-                  defaultValue={formData.datosPersonales?.direccion || ""}
-                  placeholder="Ingrese la dirección"
-                />
-              </label>
-
-              <label>
-                País de origen *
-                <input
-                  type="text"
-                  name="pais"
-                  defaultValue={formData.datosPersonales?.pais || ""}
-                  placeholder="Ejemplo: Guatemala"
-                />
-              </label>
-
-              <label>
-                Fecha de nacimiento *
-                <input
-                  type="date"
-                  name="fechaNacimiento"
-                  defaultValue={formData.datosPersonales?.fechaNacimiento || ""}
-                />
-              </label>
-
-              <label>
-                Alien Number
-                <input
-                  type="text"
-                  name="alienNumber"
-                  defaultValue={formData.datosPersonales?.alienNumber || ""}
-                  placeholder="Opcional"
-                />
-              </label>
-
-              <label>
-                Idioma nativo *
-                <select
-                  name="idioma"
-                  defaultValue={formData.datosPersonales?.idioma || ""}
-                >
-                  <option value="">Seleccione</option>
-                  <option>Español</option>
-                  <option>Portugués</option>
-                  <option>Francés</option>
-                  <option>Criollo</option>
-                  <option>Hindi</option>
-                  <option>Chino (Mandarín y Cantonés)</option>
-                  <option>Tagalo (Filipino)</option>
-                  <option>Vietnamita</option>
-                  <option>Árabe</option>
-                  <option>Coreano</option>
-                  <option>Ruso</option>
-                  <option>Italiano</option>
-                  <option>Japonés</option>
-                  <option>Persa (Farsi)</option>
-                  <option>Urdu</option>
-                  <option>Gujarati</option>
-                  <option>Turco</option>
-                  <option>Tailandés</option>
-                  <option>Inglés</option>
-                </select>
-              </label>
-            </div>
-
-            <button type="submit" className="btn-guardar">Guardar</button>
-          </form>
+        <Modal isOpen={openModal === "datosPersonales"} onClose={closeModal} title="Formulario de Datos Personales">
+           <DatosPersonalesForm formData={formData} handleSubmit={handleSubmit} />
         </Modal>
-
 
         {/* ------------------------------------------ */}
         {/* Modal Derivados (Paso 3 -> 4)              */}
         {/* ------------------------------------------ */}
-        <Modal
-          isOpen={openModal === "derivados"}
-          onClose={closeModal}
-          title="Formulario de Derivados"
-        >
-          <form
-            className="form derivados-grid"
-            onSubmit={(e) => {
-              e.preventDefault();
-
-              // ✅ Validaciones con SweetAlert (no tocar)
-              if (!hasSpouse) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Debe seleccionar si tiene esposo(a) o no",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-              if (hasSpouse === "si" && !spouseName.trim()) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Debe ingresar el nombre del esposo/a",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-              if (!hasChildren) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Debe seleccionar si tiene hijos o no",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-              if (hasChildren === "si") {
-                if (!numChildren || numChildren <= 0) {
-                  Swal.fire({
-                    toast: true,
-                    position: "bottom-end",
-                    icon: "error",
-                    title: "⚠️ Debe ingresar la cantidad de hijos",
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                  });
-                  return;
-                }
-                if (childrenNames.some((child) => !child.trim())) {
-                  Swal.fire({
-                    toast: true,
-                    position: "bottom-end",
-                    icon: "error",
-                    title: "⚠️ Debe ingresar todos los nombres de los hijos",
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true,
-                  });
-                  return;
-                }
-              }
-
-              const data = {
-                hasSpouse,
-                spouseName,
-                hasChildren,
-                numChildren: Number(numChildren) || 0,
-                childrenNames,
-              };
-              setFormData((prev) => ({ ...prev, derivados: data }));
-              setCurrentStep(4);
-              closeModal();
-
-              Swal.fire({
-                toast: true,
-                position: "bottom-end",
-                icon: "success",
-                title: "✅ Derivados guardados con éxito",
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-              });
-            }}
-          >
-            {/* Campo esposo */}
-            <label>
-              ¿Tienes esposo(a)? *
-              <select value={hasSpouse} onChange={(e) => setHasSpouse(e.target.value)}>
-                <option value="" disabled>Seleccione</option>
-                <option value="si">Sí</option>
-                <option value="no">No</option>
-              </select>
-            </label>
-
-            {hasSpouse === "si" && (
-              <label>
-                Nombre del esposo(a) *
-                <input
-                  type="text"
-                  value={spouseName}
-                  onChange={(e) => setSpouseName(e.target.value)}
-                  placeholder="Ejemplo: Ana Pérez"
-                />
-              </label>
-            )}
-
-            {/* Campo hijos */}
-            <label>
-              ¿Tienes hijos? *
-              <select
-                value={hasChildren}
-                onChange={(e) => {
-                  setHasChildren(e.target.value);
-                  setChildrenNames([]);
-                  setNumChildren(e.target.value === "si" ? 1 : 0);
-                }}
-              >
-                <option value="" disabled>Seleccione</option>
-                <option value="si">Sí</option>
-                <option value="no">No</option>
-              </select>
-            </label>
-
-            {hasChildren === "si" && (
-              <>
-                <label>
-                  ¿Cuántos hijos tienes? (máx. 12) *
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={numChildren}
-                    onInput={(e) => {
-                      e.target.value = e.target.value.replace(/[^0-9]/g, "");
-                    }}
-                    onChange={(e) => {
-                      const value = Math.min(parseInt(e.target.value, 10) || 0, 12);
-                      setNumChildren(value);
-                      setChildrenNames(Array(value).fill(""));
-                    }}
-                    placeholder="Ej: 2"
-                  />
-                </label>
-
-                {/* ✅ Nombres de hijos en dos columnas */}
-                <div className="hijos-grid">
-                  {Array.from({ length: numChildren }, (_, i) => (
-                    <label key={i}>
-                      Nombre del hijo {i + 1} *
-                      <input
-                        type="text"
-                        value={childrenNames[i] || ""}
-                        onChange={(e) => {
-                          const updated = [...childrenNames];
-                          updated[i] = e.target.value;
-                          setChildrenNames(updated);
-                        }}
-                        placeholder={`Ejemplo: Hijo ${i + 1}`}
-                      />
-                    </label>
-                  ))}
-                </div>
-              </>
-            )}
-
-            <button type="submit" className="btn-guardar">Guardar</button>
-          </form>
-        </Modal>
+        <Modal isOpen={openModal === "derivados"} onClose={closeModal} title="Formulario de Derivados">
+          <DerivadosForm
+            formData={formData}
+            setFormData={setFormData}
+            setCurrentStep={setCurrentStep}
+            closeModal={closeModal}
+        />
+      </Modal>
 
         {/* ------------------------------------------ */}
         {/* Modal Tipo de Contrato (Paso 4 -> 5)       */}
         {/* ------------------------------------------ */}
-        <Modal
+       <Modal
           isOpen={openModal === "tipoContrato"}
           onClose={closeModal}
           title="Formulario de Tipo de Contrato"
         >
-          <form
-            className="form contrato-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-
-              if (!selectedContrato) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Debe seleccionar un contrato",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-
-              const totalFinal = calcularTotal();
-              setFormData((prev) => ({
-                ...prev,
-                tipoContrato: {
-                  contrato: selectedContrato,
-                  tieneDescuento,
-                  autorizadoPor,
-                  montoDescuento,
-                  totalFinal,
-                },
-              }));
-              setCurrentStep(5);
-              closeModal();
-
-              Swal.fire({
-                toast: true,
-                position: "bottom-end",
-                icon: "success",
-                title: "✅ Contrato guardado con éxito",
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-              });
-            }}
-          >
-
-            {/* Buscar contrato */}
-            <label className="label-buscar">
-              <span>Por favor seleccione el contrato a generar *</span>
-              <input
-                type="text"
-                placeholder="Buscar contrato..."
-                value={searchContrato}
-                onChange={(e) => setSearchContrato(e.target.value)}
-                className="input-search"
-              />
-            </label>
-
-            {/* Lista de contratos */}
-            <div className="select-list">
-              {contratosFiltrados.length > 0 ? (
-                contratosFiltrados.map((c, idx) => (
-                  <div
-                    key={idx}
-                    className={`select-item ${selectedContrato?.nombre === c.nombre ? "active" : ""
-                      }`}
-                    onClick={() => setSelectedContrato(c)}
-                  >
-                    <strong>{c.nombre}</strong> — ${c.precio}
-                  </div>
-                ))
-              ) : (
-                <div className="select-empty">No se encontraron contratos</div>
-              )}
-            </div>
-
-            {/* Contrato seleccionado */}
-            {selectedContrato && (
-              <>
-                <div className="contrato-detalle">
-                  <h4>{selectedContrato.nombre}</h4>
-                  <p>
-                    <strong>Precio base:</strong> ${selectedContrato.precio}
-                  </p>
-
-                  <div className="extras">
-                    {selectedContrato.conyuge &&
-                      formData.derivados?.hasSpouse === "si" && (
-                        <p className="extra-item">
-                          👩‍❤️‍👨 <span>Cónyuge:</span> ${selectedContrato.conyuge}
-                        </p>
-                      )}
-                    {selectedContrato.hijos &&
-                      formData.derivados?.hasChildren === "si" && (
-                        <p className="extra-item">
-                          👶 <span>Hijos:</span> $
-                          {(formData.derivados?.numChildren || 0) *
-                            selectedContrato.hijos}
-                        </p>
-                      )}
-                    {selectedContrato.downpayment && (
-                      <p className="extra-item">
-                        💵 <span>Downpayment:</span> ${selectedContrato.downpayment}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Descuento */}
-                <label className="label-descuento">
-                  ¿Tiene descuento?
-                  <select
-                    value={tieneDescuento}
-                    onChange={(e) => setTieneDescuento(e.target.value)}
-                  >
-                    <option value="no">No</option>
-                    <option value="si">Sí</option>
-                  </select>
-                </label>
-
-                {tieneDescuento === "si" && (
-                  <div className="descuento-grid">
-                    <label>
-                      Autorizado por:
-                      <input
-                        type="text"
-                        placeholder="Nombre del autorizador"
-                        value={autorizadoPor}
-                        onChange={(e) => setAutorizadoPor(e.target.value)}
-                      />
-                    </label>
-
-                    <label>
-                      Monto del descuento (USD):
-                      <input
-                        type="number"
-                        min="0"
-                        value={montoDescuento}
-                        onChange={(e) => setMontoDescuento(Number(e.target.value))}
-                      />
-                    </label>
-                  </div>
-                )}
-
-                {/* Total final */}
-                <p className="total-final">
-                  💰 <strong>Total a pagar:</strong> ${calcularTotal()}
-                  {tieneDescuento === "si" && autorizadoPor && (
-                    <span className="total-autorizado">
-                      (Autorizado por: {autorizadoPor})
-                    </span>
-                  )}
-                </p>
-              </>
-            )}
-
-            <button type="submit" className="btn-guardar">
-              Guardar
-            </button>
-          </form>
-        </Modal>
-
-
+          <TipoContratoForm
+            formData={formData}
+            contratos={contratos}
+            setFormData={setFormData}
+            setCurrentStep={setCurrentStep}
+            closeModal={closeModal}
+            openModal={openModal} 
+        />
+      </Modal>
+  
         {/* ------------------------------------------ */}
         {/* Modal Downpayment (Paso 5 -> 6)            */}
         {/* ------------------------------------------ */}
-        <Modal
-          isOpen={openModal === "downPayment"}
-          onClose={closeModal}
-          title="Formulario de Downpayment"
-        >
-          <form
-            className="form downpayment-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-
-              if (!formData.tipoContrato?.contrato?.downpayment) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Debe seleccionar un contrato con Downpayment",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-
-              const cuotasValidas = cuotas.filter((c) => c.monto > 0);
-              const totalCuotas = cuotasValidas.reduce((acc, c) => acc + c.monto, 0);
-              const totalDown = formData.tipoContrato.contrato.downpayment;
-
-              if (cuotasValidas.some((c) => !c.fecha)) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: "⚠️ Ingrese la fecha para cada cuota con monto",
-                  showConfirmButton: false,
-                  timer: 2500,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-
-              if (totalCuotas !== totalDown) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: `⚠️ El total ingresado ($${totalCuotas}) debe coincidir con el Downpayment ($${totalDown})`,
-                  showConfirmButton: false,
-                  timer: 3000,
-                  timerProgressBar: true,
-                });
-                return;
-              }
-
-              setFormData((prev) => ({
-                ...prev,
-                downPayment: { cuotas: cuotasValidas, observaciones, estado: "completo" },
-              }));
-
-              setCurrentStep(6);
-              closeModal();
-
-              Swal.fire({
-                toast: true,
-                position: "bottom-end",
-                icon: "success",
-                title: "✅ Downpayment guardada con éxito",
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-              });
-            }}
-          >
-            {/* Header del formulario */}
-            <div className="form-header">
-              <p>
-                💵 <strong>Downpayment total:</strong>{" "}
-                ${formData.tipoContrato?.contrato?.downpayment || 0}
-              </p>
-
-              <label className="num-cuotas">
-                ¿En cuántas cuotas desea pagar? (máx. 6)
-                <input
-                  type="text"
-                  value={numCuotas}
-                  onInput={(e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ""))}
-                  onChange={(e) => {
-                    const value = Math.min(parseInt(e.target.value, 10) || 0, 6);
-                    setNumCuotas(value);
-                    setCuotas(Array.from({ length: value }, () => ({ monto: 0, fecha: "" })));
-                  }}
-                  placeholder="Ej: 3"
-                />
-              </label>
-            </div>
-
-            {/* Cuotas ordenadas y con sugerencias dinámicas */}
-            {(() => {
-              const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
-              const sumFilled = cuotas.reduce((a, c) => a + (c.monto || 0), 0);
-              const remaining = Math.max(totalDown - sumFilled, 0);
-
-              // índices vacíos
-              const emptyIdx = cuotas.map((q, i) => (q.monto > 0 ? null : i)).filter((i) => i !== null);
-
-              const base = emptyIdx.length ? Math.floor(remaining / emptyIdx.length) : 0;
-              const resto = emptyIdx.length ? remaining % emptyIdx.length : 0;
-
-              const suggestionByIndex = {};
-              emptyIdx.forEach((i, k) => {
-                suggestionByIndex[i] = base + (k < resto ? 1 : 0);
-              });
-
-              return (
-                <div className="cuotas-grid">
-                  {cuotas.map((c, i) => {
-                    const column =
-                      i < Math.ceil(cuotas.length / 2)
-                        ? i * 2
-                        : (i - Math.ceil(cuotas.length / 2)) * 2 + 1;
-
-                    return (
-                      <div key={i} className="cuota-card" style={{ order: column }}>
-                        <label>
-                          Cuota {i + 1} (USD)
-                          <input
-                            type="text"
-                            value={c.monto > 0 ? String(c.monto) : ""}
-                            placeholder={
-                              !c.monto && suggestionByIndex[i] > 0
-                                ? `Sugerido: ${suggestionByIndex[i]}`
-                                : "Ej: 1000"
-                            }
-                            onInput={(e) =>
-                              (e.target.value = e.target.value.replace(/[^0-9]/g, ""))
-                            }
-                            onChange={(e) => {
-                              const newCuotas = [...cuotas];
-                              newCuotas[i].monto = parseInt(e.target.value, 10) || 0;
-                              setCuotas(newCuotas);
-                            }}
-                          />
-                        </label>
-                        <label>
-                          Fecha
-                          <input
-                            type="date"
-                            value={c.fecha}
-                            onChange={(e) => {
-                              const newCuotas = [...cuotas];
-                              newCuotas[i].fecha = e.target.value;
-                              setCuotas(newCuotas);
-                            }}
-                          />
-                        </label>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })()}
-
-            {/* Total final */}
-            {cuotas.length > 0 && (() => {
-              const totalCuotas = cuotas.reduce((acc, c) => acc + (c.monto || 0), 0);
-              const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
-              const diferencia = totalDown - totalCuotas;
-
-              let previewClass = "total-preview";
-              if (diferencia === 0) previewClass += " success";
-              else if (diferencia > 0) previewClass += " warning";
-              else previewClass += " error";
-
-              return (
-                <div className={previewClass}>
-                  <p>
-                    💰 <strong>Total ingresado:</strong> ${totalCuotas} / ${totalDown}
-                  </p>
-                  {diferencia > 0 && <span>⚠️ Faltan ${diferencia}</span>}
-                  {diferencia < 0 && <span>⚠️ Se pasó por ${Math.abs(diferencia)}</span>}
-                  {diferencia === 0 && <span>✅ Cuadra exacto</span>}
-                </div>
-              );
-            })()}
-
-            <button type="submit" className="btn-guardar">
-              Guardar
-            </button>
-          </form>
-        </Modal>
+       <Modal isOpen={openModal === "downPayment"} onClose={closeModal} title="Formulario de Downpayment">
+          <DownPaymentForm
+            formData={formData}
+            setFormData={setFormData}
+            setCurrentStep={setCurrentStep}
+            closeModal={closeModal}
+            openModal={openModal}
+        />
+      </Modal>
 
         {/* ------------------------------------------ */}
         {/* Modal Pago de saldo (Paso 6 -> 7)          */}
         {/* ------------------------------------------ */}
         <Modal
-          isOpen={openModal === "observaciones"}
+          isOpen={openModal === "pagodeSaldo"}
           onClose={closeModal}
-          title="Observaciones"
+          title="Formulario de Pago de Saldo"
         >
-          <form
-            className="form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const data = Object.fromEntries(new FormData(e.target).entries());
-              setFormData((prev) => ({ ...prev, observaciones: data }));
-              setCurrentStep(7);
-              closeModal();
-              Swal.fire({
-                toast: true,
-                position: "bottom-end",
-                icon: "success",
-                title: "✅ Observaciones guardadas",
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-              });
-            }}
-          >
-            <label>
-              Observaciones
-              <textarea
-                name="texto"
-                rows="5"
-                placeholder="Notas u observaciones adicionales"
-                defaultValue={formData.observaciones?.texto || ""}
-              />
-            </label>
-
-            <button type="submit" className="btn-guardar">Guardar</button>
-          </form>
+          <PagodeSaldoForm
+            formData={formData}
+            setFormData={setFormData}
+            setCurrentStep={setCurrentStep}
+            closeModal={closeModal}
+          />
         </Modal>
+
+
+
       </div>
     </DashboardLayout>
   );

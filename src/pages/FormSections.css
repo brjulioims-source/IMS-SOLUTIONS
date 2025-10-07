@@ -1,5 +1,5 @@
 /* ========================================================== */
-/* 🔹 BASE GENERAL                                            */
+/* BASE GENERAL                                            */
 /* ========================================================== */
 
 .sections {
@@ -38,7 +38,7 @@
 }
 
 /* ===================================================== */
-/* 🔸 Responsividad                                      */
+/* Responsividad                                      */
 /* ===================================================== */
 
 /* 🖥️ Desktop grande (1440px+) */
@@ -86,7 +86,7 @@
 }
 
 /* ========================================================== */
-/* 🔹 MODAL BASE                                              */
+/* MODAL BASE                                              */
 /* ========================================================== */
 
 .modal-overlay {
@@ -134,7 +134,7 @@
 }
 
 /* ========================================================== */
-/* 🔹 FORMULARIOS BASE                                        */
+/* FORMULARIOS BASE                                        */
 /* ========================================================== */
 
 .form {
@@ -187,7 +187,7 @@
 }
 
 /* ========================================================== */
-/* 🔹 SELECCIÓN DE OFICINAS                                   */
+/* SELECCIÓN DE OFICINAS                                   */
 /* ========================================================== */
 
 .oficinas-grid {
@@ -241,7 +241,7 @@
 }
 
 /* ========================================================== */
-/* 🔹 DATOS PERSONALES                                        */
+/* DATOS PERSONALES                                        */
 /* ========================================================== */
 
 .datos-personales-grid {
@@ -286,7 +286,7 @@
 }
 
 /* ========================================================== */
-/* 🔹 DERIVADOS (Esposo/a e Hijos)                            */
+/* DERIVADOS (Esposo/a e Hijos)                            */
 /* ========================================================== */
 
 .derivados-grid {
@@ -382,7 +382,7 @@
 }
 
 /* ========================================================== */
-/* 🔹 TIPO DE CONTRATO                                        */
+/* TIPO DE CONTRATO                                        */
 /* ========================================================== */
 
 .label-buscar {
@@ -570,7 +570,7 @@
 }
 
 /* ========================================================== */
-/* 🔹 FASE DE PAGO (DOWNPAYMENT)                              */
+/* (DOWNPAYMENT)                                              */
 /* ========================================================== */
 
 .num-cuotas {
@@ -727,3 +727,302 @@
     max-width: 100%;
   }
 }
+
+/* ========================================================== */
+/* PAGO DE SALDO (idéntico a DownPayment en diseño)           */
+/* ========================================================== */
+
+.saldo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 12px;
+}
+
+.saldo-header p {
+  font-weight: 600;
+  font-size: 15px;
+  color: #111827;
+  flex: 1;
+  min-width: 280px;
+}
+
+/* Input: ¿En cuántas cuotas desea pagar el saldo? */
+.num-saldo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 280px;
+  font-size: 13px;
+}
+
+.num-saldo input {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border: 1px solid #c7c9d1;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.num-saldo input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+/* Grid de cuotas */
+.saldo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 22px 36px;
+  justify-items: center;
+  margin-top: 20px;
+}
+
+/* Card de cada cuota */
+.saldo-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 18px 22px;
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.saldo-card:hover {
+  border-color: #c7d2fe;
+  box-shadow: 0 3px 6px rgba(79, 70, 229, 0.08);
+}
+
+.saldo-card label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.saldo-card input[type="text"],
+.saldo-card input[type="date"] {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #111827;
+  background: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.saldo-card input[type="text"]:focus,
+.saldo-card input[type="date"]:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  background: #fff;
+}
+
+/* Preview de totales (igual a DownPayment) */
+.saldo-preview {
+  width: 100%;
+  max-width: 700px;
+  margin: 25px auto 15px auto;
+  padding: 16px 18px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.saldo-preview.success {
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #065f46;
+}
+
+.saldo-preview.warning {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.saldo-preview.error {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+/* Botón Guardar (centrado y ancho igual) */
+.saldo-btn-guardar {
+  width: 100%;
+  max-width: 700px;
+  margin: 10px auto 0 auto;
+  display: block;
+  text-align: center;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .saldo-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .saldo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .saldo-preview,
+  .saldo-btn-guardar {
+    max-width: 100%;
+  }
+}
+
+/* ========================================================== */
+/* TABLA DE PAGO DE SALDO (Diseño moderno y coherente)        */
+/* ========================================================== */
+
+.saldo-tabla {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+  background: transparent;
+}
+
+/* Encabezado */
+.saldo-tabla thead tr {
+  background: #f3f4f6;
+  border-radius: 10px;
+}
+
+.saldo-tabla th {
+  background: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-bottom: 2px solid #e5e7eb;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+/* Filas */
+.saldo-tabla tbody tr {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.saldo-tabla tbody tr:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.1);
+}
+
+/* Celdas */
+.saldo-tabla td {
+  padding: 12px 16px;
+  color: #1f2937;
+  border-top: 1px solid #f3f4f6;
+  font-weight: 500;
+}
+
+.saldo-tabla td:first-child {
+  font-weight: 600;
+  color: #4f46e5;
+}
+
+/* Última fila */
+.saldo-tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Fila resumen opcional */
+.saldo-tabla tfoot td {
+  background: #f9fafb;
+  border-top: 2px solid #e5e7eb;
+  font-weight: 700;
+  color: #111827;
+  padding: 14px 16px;
+}
+
+/* Sombras suaves y bordes redondeados */
+.saldo-tabla tbody tr:first-child td:first-child {
+  border-top-left-radius: 10px;
+}
+.saldo-tabla tbody tr:first-child td:last-child {
+  border-top-right-radius: 10px;
+}
+.saldo-tabla tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+.saldo-tabla tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+/* Responsive - móviles */
+@media (max-width: 768px) {
+  .saldo-tabla {
+    font-size: 13px;
+  }
+
+  .saldo-tabla th,
+  .saldo-tabla td {
+    padding: 10px 8px;
+  }
+
+  /* Diseño tipo tarjeta */
+  .saldo-tabla thead {
+    display: none;
+  }
+
+  .saldo-tabla tbody tr {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #ffffff;
+    padding: 12px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .saldo-tabla td {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border: none;
+    padding: 6px 0;
+  }
+
+  .saldo-tabla td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #6b7280;
+  }
+}
+
+
