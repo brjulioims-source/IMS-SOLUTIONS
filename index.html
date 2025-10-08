@@ -1,16 +1,36 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>IMS</title>
+    <title>Generador de Contrato</title>
+
+    <!-- 👇 Fuente limpia para los PDFs -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body>
+
+  <body style="margin:0; font-family:'Inter', sans-serif;">
     <div id="root"></div>
+
+    <!-- ======================================================== -->
+    <!-- 🧩 Dependencias para generación de documentos DOCX y PDF -->
+    <!-- ======================================================== -->
+
+    <!-- jsPDF y AutoTable (para generar PDFs con tablas) -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.0/dist/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- PizZip + Docxtemplater (para generar contratos Word desde plantilla) -->
+    <script src="https://cdn.jsdelivr.net/npm/pizzip@3.1.5/dist/pizzip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pizzip@3.1.5/dist/pizzip-utils.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docxtemplater@3.41.1/build/docxtemplater.js"></script>
+
+    <!-- ======================================================== -->
+    <!-- 🧾 Tu aplicación React (Vite se encarga del bundle) -->
+    <!-- ======================================================== -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

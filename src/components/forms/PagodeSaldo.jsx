@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 import "../../pages/FormSections.css";
+import { generarResumenContratoPDF,generarContrato } from "../../components/utils/generarResumenContratoPDF";
 
 export default function PagoSaldoForm({
   formData,
@@ -13,8 +14,13 @@ export default function PagoSaldoForm({
   const [cuotas, setCuotas] = useState([]);
   const [autorizadoPor, setAutorizadoPor] = useState("");
   const [saldoFinal, setSaldoFinal] = useState(0);
+  const [autorizadoConfirmado, setAutorizadoConfirmado] = useState(false);
+  const [exportarHabilitado, setExportarHabilitado] = useState(false);
+  const [bloqueado, setBloqueado] = useState(false); // bloquea si ya se guardó
 
-  // ✅ Validar que el downpayment esté completo
+  // ============================================================
+  //   Cargar datos existentes si ya se guardó
+  // ============================================================
   useEffect(() => {
     if (!formData.downPayment || formData.downPayment.estado !== "completo") {
       Swal.fire({
@@ -30,36 +36,22 @@ export default function PagoSaldoForm({
     const totalContrato = formData.tipoContrato?.totalFinal || 0;
     const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
     setSaldoFinal(totalContrato - totalDown);
+
+    // Si ya hay pago guardado → mostrar y bloquear
+    if (formData.pagoSaldo?.estado === "completo") {
+      const ps = formData.pagoSaldo;
+      setMontoMensual(ps.montoMensual);
+      setAutorizadoPor(ps.autorizadoPor || "");
+      setCuotas(ps.cuotas || []);
+      setNumCuotas(ps.cuotas?.length || 0);
+      setExportarHabilitado(true);
+      setBloqueado(true);
+    }
   }, [formData, closeModal]);
 
-  // ✅ Validar que haya pasado al menos un mes desde el último pago
-  const validarMesUltimoPago = () => {
-    const cuotasDown = formData.downPayment?.cuotas || [];
-    if (cuotasDown.length === 0) return true;
-
-    const ultimaFecha = cuotasDown[cuotasDown.length - 1].fecha;
-    if (!ultimaFecha) return true;
-
-    const fechaUltimoPago = new Date(ultimaFecha);
-    const hoy = new Date();
-
-    const diferenciaMeses =
-      hoy.getMonth() - fechaUltimoPago.getMonth() +
-      12 * (hoy.getFullYear() - fechaUltimoPago.getFullYear());
-
-    if (diferenciaMeses < 1) {
-      Swal.fire({
-        icon: "warning",
-        title: "⏳ No ha pasado un mes desde el último pago",
-        text: "Debe esperar al menos un mes desde la última cuota del DownPayment.",
-      });
-      return false;
-    }
-
-    return true;
-  };
-
-  // ✅ Sugerir fechas (día 1 de cada mes siguiente)
+  // ============================================================
+  // 🔹 Sugerir fechas automáticas
+  // ============================================================
   const sugerirFechas = (n) => {
     const hoy = new Date();
     const fechas = [];
@@ -67,15 +59,19 @@ export default function PagoSaldoForm({
       const fecha = new Date(hoy);
       fecha.setDate(1);
       fecha.setMonth(hoy.getMonth() + i + 1);
-      fechas.push(fecha.toISOString().split("T")[0]); // formato ISO para almacenar
+      fechas.push(
+        fecha.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        })
+      );
     }
     return fechas;
   };
 
-  // ✅ Calcular cuotas automáticas según el monto mensual
   const calcularCuotas = (monto) => {
     if (!saldoFinal || monto <= 0) return [];
-
     const numPagos = Math.ceil(saldoFinal / monto);
     setNumCuotas(numPagos);
 
@@ -90,24 +86,30 @@ export default function PagoSaldoForm({
     });
   };
 
-  // ✅ Convertir fecha ISO a formato mm/dd/aaaa
-  const formatearFecha = (fechaISO) => {
-    const fecha = new Date(fechaISO);
-    const mes = String(fecha.getMonth() + 1).padStart(2, "0");
-    const dia = String(fecha.getDate()).padStart(2, "0");
-    const año = fecha.getFullYear();
-    return `${mes}/${dia}/${año}`;
-  };
+  // ============================================================
+  //   Capitalizar nombre
+  // ============================================================
+  const capitalizarNombre = (nombre) =>
+    nombre
+      ? nombre
+          .trim()
+          .toLowerCase()
+          .split(" ")
+          .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+          .join(" ")
+      : "";
 
-  // ✅ Cuando el usuario termina de ingresar el monto (onBlur)
+  // ============================================================
+  //   Calcular cuotas
+  // ============================================================
   const handleMontoBlur = async () => {
     if (!montoMensual || montoMensual <= 0) return;
 
-    if (montoMensual < 650) {
+    if (montoMensual < 650 && !autorizadoConfirmado) {
       const result = await Swal.fire({
         icon: "warning",
-        title: "⚠️ Monto mensual bajo",
-        text: "El monto mensual es menor a $650. ¿Está autorizado?",
+        title: `⚠️ Monto mensual bajo ($${montoMensual})`,
+        text: "¿Está autorizado este monto?",
         showCancelButton: true,
         confirmButtonText: "Sí, autorizado",
         cancelButtonText: "No",
@@ -130,23 +132,30 @@ export default function PagoSaldoForm({
         },
       });
 
-      setAutorizadoPor(autorizado || "");
+      setAutorizadoPor(capitalizarNombre(autorizado || ""));
+      setAutorizadoConfirmado(true);
     }
 
     const nuevasCuotas = calcularCuotas(montoMensual);
     setCuotas(nuevasCuotas);
   };
 
+  // ============================================================
+  //   Guardar formulario
+  // ============================================================
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validarMesUltimoPago()) return;
-
     if (montoMensual < 650 && !autorizadoPor.trim()) {
       Swal.fire({
+        toast: true,
+        position: "bottom-end",
         icon: "error",
         title: "⚠️ Autorización requerida",
         text: "Debe ingresar quién autorizó el monto mensual bajo.",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
       });
       return;
     }
@@ -161,6 +170,9 @@ export default function PagoSaldoForm({
       },
     }));
 
+    setExportarHabilitado(true);
+    setBloqueado(true);
+
     setCurrentStep(7);
     closeModal();
 
@@ -171,12 +183,53 @@ export default function PagoSaldoForm({
       title: "✅ Pago de saldo guardado con éxito",
       showConfirmButton: false,
       timer: 2000,
+      timerProgressBar: true,
     });
   };
 
+  // ============================================================
+  //   Si intenta editar, preguntar confirmación
+  // ============================================================
+  const handleEditarIntento = async () => {
+    if (bloqueado) {
+      const confirm = await Swal.fire({
+        icon: "question",
+        title: "¿Desea editar el pago guardado?",
+        text: "Esto permitirá modificar los valores del saldo.",
+        showCancelButton: true,
+        confirmButtonText: "Sí, quiero editar",
+        cancelButtonText: "No",
+      });
+
+      if (confirm.isConfirmed) {
+        setBloqueado(false); // ✅ desbloquea edición
+        setExportarHabilitado(false); // opcional: desactiva exportar hasta guardar otra vez
+        Swal.fire({
+          toast: true,
+          position: "bottom-end",
+          icon: "info",
+          title: "✏️ Edición habilitada",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+    }
+  };
+
+  // ============================================================
+  //   Render
+  // ============================================================
   return (
-    <form className="saldo-form" onSubmit={handleSubmit}>
-      {/* Header principal */}
+    <form
+      className="saldo-form"
+      onSubmit={handleSubmit}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleSubmit(e);
+        }
+      }}
+    >
       <div className="saldo-header">
         <p>
           💰 <strong>Saldo final a pagar:</strong> ${saldoFinal}
@@ -193,17 +246,23 @@ export default function PagoSaldoForm({
             }
             onChange={(e) => setMontoMensual(parseInt(e.target.value, 10) || 0)}
             onBlur={handleMontoBlur}
+            readOnly={bloqueado}         //  sigue deshabilitado si no ha confirmado
+            onClick={handleEditarIntento} //  esta línea permite preguntar para editar
           />
         </label>
       </div>
 
-      {/* Cuotas en formato tabla */}
       {cuotas.length > 0 && (
         <>
           <div className="saldo-preview">
             <p>
               📅 <strong>Total de meses estimado:</strong> {numCuotas}
             </p>
+            {autorizadoPor && (
+              <p className="autorizado-info">
+                ✅ <strong>Autorizado por:</strong> {autorizadoPor}
+              </p>
+            )}
           </div>
 
           <table className="saldo-tabla">
@@ -211,15 +270,15 @@ export default function PagoSaldoForm({
               <tr>
                 <th>#</th>
                 <th>Fecha estimada</th>
-                <th>Monto a pagar (USD)</th>
+                <th>Monto (USD)</th>
               </tr>
             </thead>
             <tbody>
               {cuotas.map((c, i) => (
                 <tr key={i}>
-                  <td>{i + 1}</td>
-                  <td>{formatearFecha(c.fecha)}</td>
-                  <td>${c.monto}</td>
+                  <td data-label="Cuota">{i + 1}</td>
+                  <td data-label="Fecha">{c.fecha}</td>
+                  <td data-label="Monto">${c.monto}</td>
                 </tr>
               ))}
             </tbody>
@@ -227,22 +286,41 @@ export default function PagoSaldoForm({
         </>
       )}
 
-      {/* Autorización manual si aplica */}
-      {montoMensual > 0 && montoMensual < 650 && !autorizadoPor && (
-        <label>
-          Autorizado por:
-          <input
-            type="text"
-            placeholder="Nombre del autorizador"
-            value={autorizadoPor}
-            onChange={(e) => setAutorizadoPor(e.target.value)}
-          />
-        </label>
-      )}
+      <div className="botones-acciones">
+        {!bloqueado && (
+          <button type="submit" className="btn-guardar-saldo">
+            Guardar
+          </button>
+        )}
 
-      <button type="submit" className="btn-guardar">
-        Guardar
-      </button>
+        <button
+          type="button"
+          className="btn-exportar"
+          onClick={() => generarResumenContratoPDF(formData)}
+          disabled={!exportarHabilitado}
+          style={{
+            opacity: exportarHabilitado ? 1 : 0.6,
+            cursor: exportarHabilitado ? "pointer" : "not-allowed",
+          }}
+        >
+          📄 Exportar resumen PDF
+        </button>
+
+        {/*   Nuevo botón para exportar contrato completo */}
+        <button
+          type="button"
+          className="btn-contrato"
+          onClick={() => generarContrato(formData, "contrato")}
+          disabled={!exportarHabilitado}
+          style={{
+            opacity: exportarHabilitado ? 1 : 0.6,
+            cursor: exportarHabilitado ? "pointer" : "not-allowed",
+            marginLeft: "10px",
+          }}
+        >
+          📝 Exportar Contrato Legal
+        </button>
+      </div>
     </form>
   );
 }

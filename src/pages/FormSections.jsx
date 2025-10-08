@@ -247,9 +247,6 @@ function FormSections() {
             closeModal={closeModal}
           />
         </Modal>
-
-
-
       </div>
     </DashboardLayout>
   );

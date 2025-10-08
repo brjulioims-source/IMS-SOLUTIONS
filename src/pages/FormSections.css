@@ -38,7 +38,7 @@
 }
 
 /* ===================================================== */
-/* Responsividad                                      */
+/* Responsividad                                         */
 /* ===================================================== */
 
 /* 🖥️ Desktop grande (1440px+) */
@@ -86,7 +86,7 @@
 }
 
 /* ========================================================== */
-/* MODAL BASE                                              */
+/* MODAL BASE                                                 */
 /* ========================================================== */
 
 .modal-overlay {
@@ -134,7 +134,7 @@
 }
 
 /* ========================================================== */
-/* FORMULARIOS BASE                                        */
+/* FORMULARIOS BASE                                           */
 /* ========================================================== */
 
 .form {
@@ -187,7 +187,7 @@
 }
 
 /* ========================================================== */
-/* SELECCIÓN DE OFICINAS                                   */
+/* SELECCIÓN DE OFICINAS                                      */
 /* ========================================================== */
 
 .oficinas-grid {
@@ -895,7 +895,7 @@
 }
 
 /* ========================================================== */
-/* TABLA DE PAGO DE SALDO (Diseño moderno y coherente)        */
+/* TABLA DE PAGO DE SALDO                                     */
 /* ========================================================== */
 
 .saldo-tabla {
@@ -1023,6 +1023,95 @@
     font-weight: 600;
     color: #6b7280;
   }
+}
+.botones-acciones {
+  display: flex;
+  justify-content: space-between; /* los separa */
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 700px; /* mismo ancho que tus botones previos */
+  margin: 20px auto;
+}
+
+/* ambos botones con mismo alto y que llenen el ancho */
+.btn-guardar-saldo,
+.btn-exportar {
+  flex: 1; /* los hace ocupar la misma proporción */
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* estilos del botón Guardar */
+.btn-guardar-saldo {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.btn-guardar:hover {
+  background: #4338ca;
+}
+
+/* estilos del botón Exportar */
+.btn-exportar {
+  background: linear-gradient(90deg, #059669, #10b981);
+  color: #fff;
+  transition: all 0.25s ease;
+}
+
+.btn-exportar:hover {
+  background: linear-gradient(90deg, #047857, #059669);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .botones-acciones {
+    flex-direction: column;
+  }
+
+  .btn-guardar-saldo,
+  .btn-exportar {
+    width: 100%;
+  }
+}
+.botones-acciones {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-guardar-saldo,
+.btn-exportar,
+.btn-contrato {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-guardar-saldo {
+  background-color: #4f46e5;
+  color: white;
+}
+
+.btn-exportar {
+  background-color: #f3f4f6;
+}
+
+.btn-contrato {
+  background-color: #10b981;
+  color: white;
 }
 
 
