@@ -147,10 +147,10 @@ const mapCampos = (formData) => {
       const indicePalabra =
         i < numerosEnPalabras.length ? numerosEnPalabras[i] : `${i + 1}th`;
 
-      // ✅ Línea perfectamente limpia, sin dobles espacios ni tabulaciones
+      // Línea perfectamente limpia, sin dobles espacios ni tabulaciones
       return `${indicePalabra} payment: USD $${monto} due on ${mes} ${dia}${sufijo}, ${year}`;
     })
-    .join("\n\n"); // doble salto entre líneas, idéntico al ejemplo oficial
+    .join("\n"); // doble salto entre líneas, idéntico al ejemplo oficial
 
 
   return {
@@ -203,7 +203,7 @@ export async function exportContrato_DOCX(formData) {
 }
 
 /* ==========================================================
-   3️⃣ FUNCIÓN PRINCIPAL — Elige modo: 'resumen' o 'contrato'
+    FUNCIÓN PRINCIPAL — Elige modo: 'resumen' o 'contrato'
    ========================================================== */
 export function generarContrato(formData, modo = "resumen") {
   if (modo === "contrato") return exportContrato_DOCX(formData);

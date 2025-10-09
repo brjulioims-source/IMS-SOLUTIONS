@@ -117,7 +117,6 @@ function FormSections() {
   const openDownPayment = () => setOpenModal("downPayment");
   const openPagodeSaldo = () => setOpenModal("pagodeSaldo");
   const openCartaMatrimonio = () => setOpenModal("cartaMatrimonio");
-  const openCartaAudiencia = () => setOpenModal("cartaAudiencia");
   const openPagoTarjeta = () => setOpenModal("pagoTarjeta");
 
  
@@ -169,8 +168,7 @@ function FormSections() {
           <div className="section-card" onClick={openTipoContrato}>📑 Tipo de Contrato</div>
           <div className="section-card" onClick={openDownPayment}>💵 Down Payment</div>
           <div className="section-card" onClick={openPagodeSaldo}>💰 Pago de saldo</div>
-          <div className="section-card" onClick={openCartaMatrimonio}>📜 Carta res. de matrimonio</div>
-          <div className="section-card" onClick={openCartaAudiencia}>⚖️ Carta res. próxima audiencia</div>
+          <div className="section-card" onClick={openCartaMatrimonio}>📜 Cartas</div>
           <div className="section-card" onClick={openPagoTarjeta}>💳 Pago con tarjeta digital</div>
         </div>
 

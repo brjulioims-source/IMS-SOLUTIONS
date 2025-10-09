@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 import "../../pages/FormSections.css";
-import { generarResumenContratoPDF,generarContrato } from "../../components/utils/generarResumenContratoPDF";
+import { generarContrato } from "../../components/utils/generarResumenContratoPDF";
 
 export default function PagoSaldoForm({
   formData,
@@ -292,19 +292,6 @@ export default function PagoSaldoForm({
             Guardar
           </button>
         )}
-
-        <button
-          type="button"
-          className="btn-exportar"
-          onClick={() => generarResumenContratoPDF(formData)}
-          disabled={!exportarHabilitado}
-          style={{
-            opacity: exportarHabilitado ? 1 : 0.6,
-            cursor: exportarHabilitado ? "pointer" : "not-allowed",
-          }}
-        >
-          📄 Exportar resumen PDF
-        </button>
 
         {/*   Nuevo botón para exportar contrato completo */}
         <button
