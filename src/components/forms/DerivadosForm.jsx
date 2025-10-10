@@ -75,7 +75,7 @@ export default function DerivadosForm({ formData, setFormData, setCurrentStep, c
           <label>
             ¿Cuántos hijos tienes? *
             <input
-              type="number"
+              type="text"
               value={numChildren}
               min="1"
               max="12"
