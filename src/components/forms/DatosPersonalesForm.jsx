@@ -1,4 +1,4 @@
-import "../../pages/FormSections.css";
+import "./DatosPersonalesForm.css";
 import Swal from "sweetalert2";
 
 export default function DatosPersonalesForm({ formData, handleSubmit }) {

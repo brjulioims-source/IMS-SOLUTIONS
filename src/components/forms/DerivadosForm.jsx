@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import { useState } from "react";
-import "../../pages/FormSections.css";
+import "./DerivadosForm.css";
 
 export default function DerivadosForm({ formData, setFormData, setCurrentStep, closeModal }) {
   const [hasSpouse, setHasSpouse] = useState(formData.derivados?.hasSpouse || "");

@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 import { useState } from "react";
-import "../../pages/FormSections.css"; 
+import "./DownPaymentForm.css"
 
 export default function DownPaymentForm({
   formData,
@@ -14,7 +14,7 @@ export default function DownPaymentForm({
 
   const totalDown = formData.tipoContrato?.contrato?.downpayment || 0;
 
-  // ✅ función para obtener sugerencias dinámicas
+  // función para obtener sugerencias dinámicas
   const getSuggestions = () => {
     const sumFilled = cuotas.reduce((a, c) => a + (c.monto || 0), 0);
     const remaining = Math.max(totalDown - sumFilled, 0);
@@ -95,7 +95,7 @@ export default function DownPaymentForm({
     });
   };
 
-  // ✅ función que genera la vista previa
+  // función que genera la vista previa
   const renderPreview = () => {
     if (cuotas.length === 0) return null;
 

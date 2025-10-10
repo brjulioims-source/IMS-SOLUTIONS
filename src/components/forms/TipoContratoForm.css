@@ -1,0 +1,187 @@
+/* ========================================================== */
+/* TIPO DE CONTRATO                                        */
+/* ========================================================== */
+
+.label-buscar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 20px;
+}
+
+.label-buscar input {
+  padding: 10px 12px;
+  border: 1px solid #c7c9d1;
+  border-radius: 6px;
+  font-size: 14px;
+  background: #fafafa;
+  transition: all 0.2s ease;
+}
+
+.label-buscar input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  background: #fff;
+}
+
+.select-list {
+  margin-top: 15px;
+  max-height: 350px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color, #ccc);
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px;
+}
+
+.select-item {
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1.6;
+  transition: background 0.2s, transform 0.1s;
+  border: 1px solid transparent;
+  background-color: #fafafa;
+}
+
+.select-item:hover {
+  background: rgba(79, 70, 229, 0.08);
+  border: 1px solid var(--link-active-color, #4f46e5);
+  transform: translateX(3px);
+}
+
+.select-item.active {
+  background: rgba(79, 70, 229, 0.15);
+  border: 1px solid var(--link-active-color, #4f46e5);
+  font-weight: 600;
+}
+
+.select-empty {
+  padding: 14px;
+  color: #888;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Detalle del contrato */
+.contrato-detalle {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.contrato-detalle h4 {
+  margin-bottom: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  border-bottom: 1px solid #f3f4f6;
+  padding-bottom: 6px;
+}
+
+.contrato-detalle p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.extras {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+
+.extra-item {
+  font-size: 14px;
+  color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.extra-item span {
+  font-weight: 600;
+  color: #111827;
+}
+
+.label-descuento {
+  margin-top: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.descuento-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 36px;
+  margin-top: 10px;
+}
+
+.descuento-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.descuento-grid input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.descuento-grid input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .descuento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Total del contrato */
+.total-final {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.total-autorizado {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  display: block;
+  margin-top: 4px;
+}

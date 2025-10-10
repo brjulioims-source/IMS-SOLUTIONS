@@ -1,0 +1,95 @@
+/* ========================================================== */
+/* DERIVADOS (Esposo/a e Hijos)                            */
+/* ========================================================== */
+
+.derivados-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 36px;
+  margin-top: 15px;
+}
+
+/* Campos principales */
+.derivados-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+/* Inputs */
+.derivados-grid input,
+.derivados-grid select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+.derivados-grid input:focus,
+.derivados-grid select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+/* 🔹 Grid de hijos (2 columnas también) */
+.hijos-grid {
+  grid-column: span 2; /* ocupa todo el ancho del formulario */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 36px;
+  margin-top: 10px;
+}
+
+.hijos-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+}
+
+.hijos-grid input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+.hijos-grid input:focus {
+  border-color: #4f46e5;
+  background: #fff;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+}
+
+/* Botón guardar */
+.derivados-grid .btn-guardar {
+  grid-column: span 2;
+  width: 100%;
+  max-width: 700px;
+  justify-self: center;
+  margin-top: 15px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .derivados-grid,
+  .hijos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .derivados-grid .btn-guardar {
+    max-width: 100%;
+  }
+}

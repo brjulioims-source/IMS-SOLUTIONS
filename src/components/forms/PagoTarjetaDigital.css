@@ -1,0 +1,113 @@
+/* ========================================================== */
+/* FORMULARIO - PAGO TARJETA DIGITAL (ESTILO UNIFICADO)       */
+/* ========================================================== */
+
+.pago-tarjeta-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px 36px;
+  margin-top: 20px;
+}
+
+/* 📌 Etiquetas */
+.pago-tarjeta-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  gap: 6px;
+}
+
+/* 📌 Inputs y selects */
+.pago-tarjeta-form input[type="text"],
+.pago-tarjeta-form input[type="tel"],
+.pago-tarjeta-form input[type="month"],
+.pago-tarjeta-form select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fafafa;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pago-tarjeta-form input:focus,
+.pago-tarjeta-form select:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  background: #fff;
+}
+
+/* 📌 Radio buttons */
+.radio-group {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.radio-group input[type="radio"] {
+  accent-color: #4f46e5;
+  cursor: pointer;
+}
+
+/* 📌 Botón Guardar */
+.pago-tarjeta-form .btn-guardar {
+  grid-column: span 2;
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.3s ease;
+}
+
+.pago-tarjeta-form .btn-guardar:hover {
+  background: #4338ca;
+}
+
+/* 📌 Ocultar flechas en inputs numéricos */
+.pago-tarjeta-form input::-webkit-outer-spin-button,
+.pago-tarjeta-form input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.pago-tarjeta-form input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* 📌 Responsive */
+@media (max-width: 768px) {
+  .pago-tarjeta-form {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pago-tarjeta-form .btn-guardar {
+    grid-column: span 1;
+    width: 100%;
+  }
+
+  .radio-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

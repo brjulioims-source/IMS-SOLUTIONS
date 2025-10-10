@@ -1,4 +1,4 @@
-import "../../pages/FormSections.css";
+import "./OficinasForm.css";
 import Swal from "sweetalert2";
 
 export default function OficinasForm({ formData, handleSubmit }) {

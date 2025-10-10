@@ -1,0 +1,53 @@
+/* ========================================================== */
+/* SELECCIÓN DE OFICINAS                                      */
+/* ========================================================== */
+
+.oficinas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px 40px;
+  margin-top: 20px;
+  justify-items: center;
+}
+
+.oficina-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 140px;
+  height: 45px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.oficina-card:hover {
+  background: #eef2ff;
+  border-color: #6366f1;
+  transform: translateY(-2px);
+}
+
+.oficina-card input[type="radio"] {
+  display: none;
+}
+
+.oficina-card input[type="radio"]:checked + span {
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 4px 8px;
+  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.25);
+}
+
+.oficina-card span {
+  width: 100%;
+  text-align: center;
+  border-radius: 6px;
+}

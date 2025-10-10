@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import "../../pages/FormSections.css"; 
+import "./TipoContratoForm.css"; 
 
 export default function TipoContratoForm({
   formData,

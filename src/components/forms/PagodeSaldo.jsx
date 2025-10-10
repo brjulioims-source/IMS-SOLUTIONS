@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 import { useState, useEffect } from "react";
 import "../../pages/FormSections.css";
 import { generarContrato } from "../../components/utils/generarResumenContratoPDF";
+import "./PagodeSaldo.css"
 
 export default function PagoSaldoForm({
   formData,

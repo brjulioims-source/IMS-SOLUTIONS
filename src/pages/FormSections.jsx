@@ -10,6 +10,8 @@ import DerivadosForm from "../components/forms/DerivadosForm.jsx";
 import TipoContratoForm from "../components/forms/TipoContratoForm.jsx";
 import DownPaymentForm from "../components/forms/DownPaymentForm.jsx";
 import PagodeSaldoForm from "../components/forms/PagodeSaldo.jsx";  
+import PagoTarjetaDigital from "../components/forms/PagoTarjetaDigita.jsx";
+
 
 
 function FormSections() {
@@ -27,6 +29,7 @@ function FormSections() {
     tipoContrato: {},
     downPayment: {},
     pagodeSaldo: {},
+    pagoTarjetaDigital:{}
   });
 
   // -----------------------------
@@ -117,7 +120,7 @@ function FormSections() {
   const openDownPayment = () => setOpenModal("downPayment");
   const openPagodeSaldo = () => setOpenModal("pagodeSaldo");
   const openCartaMatrimonio = () => setOpenModal("cartaMatrimonio");
-  const openPagoTarjeta = () => setOpenModal("pagoTarjeta");
+  const openPagoTarjeta = () => setOpenModal("pagoTarjetaDigital");
 
  
   // Validación genérica
@@ -245,6 +248,20 @@ function FormSections() {
             closeModal={closeModal}
           />
         </Modal>
+
+
+        {/* ------------------------------------------ */}
+        {/* Modal Pago tarjeta (Paso 7 -> 8)          */}
+        {/* ------------------------------------------ */}
+        <Modal
+        isOpen={openModal === "pagoTarjetaDigital"} onClose={closeModal} title="Formulario de Pago con Tarjeta Digital">
+        <PagoTarjetaDigital
+          formData={formData}
+          setFormData={setFormData}
+          closeModal={closeModal}
+          setCurrentStep={setCurrentStep}
+        />
+      </Modal>
       </div>
     </DashboardLayout>
   );
