@@ -193,14 +193,15 @@ function FormSections() {
         {/* ------------------------------------------ */}
         {/* Modal Derivados (Paso 3 -> 4)              */}
         {/* ------------------------------------------ */}
-        <Modal isOpen={openModal === "derivados"} onClose={closeModal} title="Formulario de Derivados">
-          <DerivadosForm
-            formData={formData}
-            setFormData={setFormData}
-            setCurrentStep={setCurrentStep}
-            closeModal={closeModal}
-        />
-      </Modal>
+<Modal isOpen={openModal === "derivados"} onClose={closeModal} title="Formulario de Derivados">
+  <DerivadosForm
+    formData={formData}
+    setFormData={setFormData}
+    setCurrentStep={setCurrentStep}
+    closeModal={closeModal}
+  />
+</Modal>
+
 
         {/* ------------------------------------------ */}
         {/* Modal Tipo de Contrato (Paso 4 -> 5)       */}

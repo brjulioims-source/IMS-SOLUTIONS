@@ -48,31 +48,31 @@
 /* Responsividad                                         */
 /* ===================================================== */
 
-/* 🖥️ Desktop grande (1440px+) */
+/* Desktop grande (1440px+) */
 @media (min-width: 1440px) {
   .sections {
     grid-template-columns: repeat(8, 1fr);
   }
 }
 
-/* 💻 Laptop / desktop medio */
+/*Laptop / desktop medio */
 @media (max-width: 1439px) and (min-width: 1024px) {
   .sections {
     grid-template-columns: repeat(6, 1fr);
   }
 }
 
-/* 📱 Tablets */
+/* Tablets */
 @media (max-width: 1023px) and (min-width: 600px) {
   .sections {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* 📲 Móviles (iPhone, etc.) */
+/* Móviles (iPhone, etc.) */
 @media (max-width: 599px) {
   .section-card {
-    height: 100px;  /* 👈 un poco más chico para pantallas pequeñas */
+    height: 100px;  /* un poco más chico para pantallas pequeñas */
     max-width: 320px;
     padding: 16px 20px;
     font-size: 15px;

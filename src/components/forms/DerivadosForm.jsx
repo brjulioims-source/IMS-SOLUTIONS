@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./DerivadosForm.css";
 
 export default function DerivadosForm({ formData, setFormData, setCurrentStep, closeModal }) {
@@ -8,7 +8,20 @@ export default function DerivadosForm({ formData, setFormData, setCurrentStep, c
   const [hasChildren, setHasChildren] = useState(formData.derivados?.hasChildren || "");
   const [numChildren, setNumChildren] = useState(formData.derivados?.numChildren || 0);
   const [childrenNames, setChildrenNames] = useState(formData.derivados?.childrenNames || []);
-  
+
+  // Al abrir el modal, mostramos alerta si ya había información guardada
+  useEffect(() => {
+    if (formData.derivados && (formData.derivados.hasSpouse || formData.derivados.hasChildren)) {
+      Swal.fire({
+        toast: true,
+        icon: "info",
+        title: "✅ Ya has llenado estos campos anteriormente",
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 2500
+      });
+    }
+  }, [formData.derivados]);
 
   return (
     <form
@@ -62,7 +75,7 @@ export default function DerivadosForm({ formData, setFormData, setCurrentStep, c
         <select value={hasChildren} onChange={(e) => {
           setHasChildren(e.target.value);
           setChildrenNames([]);
-          setNumChildren(e.target.value === "si" ? 1 : 0);
+          setNumChildren(0);
         }}>
           <option value="" disabled>Seleccione</option>
           <option value="si">Sí</option>
@@ -76,8 +89,8 @@ export default function DerivadosForm({ formData, setFormData, setCurrentStep, c
             ¿Cuántos hijos tienes? *
             <input
               type="text"
-              value={numChildren}
-              min="1"
+              value={numChildren === 0 ? "" : numChildren}
+              min="0"
               max="12"
               onChange={(e) => {
                 const value = Math.min(parseInt(e.target.value, 10) || 0, 12);

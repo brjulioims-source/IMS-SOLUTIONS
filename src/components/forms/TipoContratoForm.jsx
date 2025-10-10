@@ -26,6 +26,22 @@ export default function TipoContratoForm({
   const [montoDescuento, setMontoDescuento] = useState(
     formData.tipoContrato?.montoDescuento || 0
   );
+  
+  // -----------------------------
+  // useEffect para mostrar alerta si ya hay datos guardados
+  // -----------------------------
+  useEffect(() => {
+    if (openModal === "tipoContrato" && formData.tipoContrato && formData.tipoContrato.contrato) {
+      Swal.fire({
+        toast: true,
+        icon: "info",
+        title: "✅ Ya has llenado estos campos anteriormente",
+        position: "bottom-end",  
+        showConfirmButton: false,
+      timer: 2500
+      });
+    }
+  }, [openModal, formData.tipoContrato]);
 
   // -----------------------------
   // useEffect para sincronizar al abrir modal

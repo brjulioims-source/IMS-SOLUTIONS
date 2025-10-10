@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import "./PagoTarjetaDigital.css";
+import { useEffect } from "react";
 
 
 function PagoTarjetaDigital({ formData, setFormData, closeModal, setCurrentStep }) {
@@ -23,6 +24,21 @@ function PagoTarjetaDigital({ formData, setFormData, closeModal, setCurrentStep 
       [name]: value
     }));
   };
+  // -----------------------------
+  // useEffect para mostrar alerta si ya hay datos guardados
+  // -----------------------------
+  useEffect(() => {
+    if (formData.pagoTarjeta && Object.keys(formData.pagoTarjeta).length > 0) {
+      Swal.fire({
+        toast: true,
+        icon: "info",
+        title: "✅ Ya has llenado estos campos anteriormente",
+        position: "bottom-end", 
+        showConfirmButton: false,
+        timer: 2500
+      });
+    }
+  }, [formData.pagoTarjeta]);
 
   const handleNumberInput = (e, field, maxLength) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, maxLength);

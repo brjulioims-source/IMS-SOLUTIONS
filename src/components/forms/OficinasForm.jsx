@@ -1,7 +1,20 @@
 import "./OficinasForm.css";
 import Swal from "sweetalert2";
+import { useEffect } from "react";
 
 export default function OficinasForm({ formData, handleSubmit }) {
+   useEffect(() => {
+    if (formData.oficinas && formData.oficinas.oficina) {
+      Swal.fire({
+        toast: true,
+        icon: "info",
+        title: "✅ Ya has llenado estos campos anteriormente",
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 2500
+      });
+    }
+  }, [formData.oficinas]);
   return (
     <form
       className="form"

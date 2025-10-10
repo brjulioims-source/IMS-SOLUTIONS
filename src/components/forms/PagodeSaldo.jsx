@@ -50,8 +50,25 @@ export default function PagoSaldoForm({
     }
   }, [formData, closeModal]);
 
+  // -----------------------------
+  // useEffect para mostrar alerta si ya hay datos guardados
+  // -----------------------------
+  useEffect(() => {
+    if (formData.pagoSaldo && formData.pagoSaldo.estado === "completo") {
+      Swal.fire({
+        toast: true,
+        icon: "info",
+        title: "✅ Ya has llenado estos campos anteriormente",
+        position: "bottom-end", 
+        showConfirmButton: false,
+        timer: 2500
+      });
+    }
+  }, [formData.pagoSaldo]);
+
+
   // ============================================================
-  // 🔹 Sugerir fechas automáticas
+  //  Sugerir fechas automáticas
   // ============================================================
   const sugerirFechas = (n) => {
     const hoy = new Date();

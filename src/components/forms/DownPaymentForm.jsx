@@ -1,6 +1,7 @@
 import Swal from "sweetalert2";
 import { useState } from "react";
 import "./DownPaymentForm.css"
+import { useEffect } from "react";
 
 export default function DownPaymentForm({
   formData,
@@ -34,6 +35,21 @@ export default function DownPaymentForm({
 
     return suggestionByIndex;
   };
+  // -----------------------------
+  // useEffect para mostrar alerta si ya hay datos guardados
+  // -----------------------------
+  useEffect(() => {
+    if (formData.downPayment && formData.downPayment.cuotas?.length > 0) {
+      Swal.fire({
+        toast: true,
+        icon: "info",
+        title: "✅ Ya has llenado estos campos anteriormente",
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 2500
+      });
+    }
+  }, [formData.downPayment]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

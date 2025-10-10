@@ -1,14 +1,34 @@
 import "./DatosPersonalesForm.css";
 import Swal from "sweetalert2";
+import { useEffect } from "react";
 
 export default function DatosPersonalesForm({ formData, handleSubmit }) {
+  // ✅ Al montar el formulario, si ya hay información guardada, mostramos alerta
+  useEffect(() => {
+    if (formData.datosPersonales && Object.keys(formData.datosPersonales).length > 0) {
+      Swal.fire({
+        toast: true,
+        icon: "info",
+        title: "✅ Ya has llenado estos campos anteriormente",
+        position: "bottom-end",
+        showConfirmButton: false,
+        timer: 2500
+      });
+    }
+  }, [formData.datosPersonales]);
+
   return (
     <form
       className="form datos-form-grid"
       onSubmit={(e) =>
         handleSubmit(e, "datosPersonales", 2, [
-          e.target[0].value, e.target[1].value, e.target[2].value,
-          e.target[3].value, e.target[4].value, e.target[5].value, e.target[7].value,
+          e.target[0].value,
+          e.target[1].value,
+          e.target[2].value,
+          e.target[3].value,
+          e.target[4].value,
+          e.target[5].value,
+          e.target[7].value,
         ])
       }
     >
